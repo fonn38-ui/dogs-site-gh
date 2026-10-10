@@ -371,7 +371,7 @@
     document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",()=>top.classList.remove("mobile-open")));
   }
 
-  // ====== COUNT-UP ======
+  // ====== COUNT-UP (сразу финальное значение, анимация при появлении) ======
   function setupCountUp(){
     const els=document.querySelectorAll("[data-count]");
     if (!els.length) return;
@@ -388,6 +388,9 @@
       };
       requestAnimationFrame(tick);
     };
+    // Сразу показать финальное значение чтобы SEO и до JS не было 0
+    els.forEach(el=>{ el.textContent = parseInt(el.dataset.count,10)||0; });
+    // Затем анимировать от 0 при попадании в viewport
     if (!("IntersectionObserver" in window)){
       els.forEach(animate);
       return;

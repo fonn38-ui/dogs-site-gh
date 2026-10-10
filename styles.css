@@ -368,3 +368,53 @@ img.loaded{animation:none}
 .service-photo{position:relative;overflow:hidden;aspect-ratio:5/4;background:linear-gradient(135deg,#1a2238,#0F1424)}
 .service-photo img{transition:transform .6s ease}
 .service-card:hover .service-photo img{transform:scale(1.06)}
+
+/* ===== V15 MOBILE FIXES ===== */
+.hero-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s ease}
+.hero-frame.active img{transform:scale(1)}
+.hero-frame img[alt="Собака"]{color:transparent;text-indent:-9999px;overflow:hidden}
+.hero-loader{position:absolute;inset:0;background:linear-gradient(135deg,#0a0e1a 0%,#161c2e 50%,#0a0e1a 100%);background-size:200% 200%;animation:heroShimmer 2s ease infinite;display:flex;align-items:center;justify-content:center}
+@keyframes heroShimmer{0%,100%{background-position:0% 0%}50%{background-position:100% 100%}}
+
+/* Mobile-specific improvements */
+@media (max-width:820px){
+  .feature-photo{min-height:200px!important}
+  .service-photo{min-height:180px!important}
+  .features-grid{grid-template-columns:1fr!important;gap:20px}
+  .services-grid{grid-template-columns:1fr!important;gap:16px}
+  .footer-grid{grid-template-columns:1fr!important;gap:24px;text-align:center}
+  .footer-brand{text-align:center}
+  .contact-grid{grid-template-columns:1fr!important}
+  .location-grid{grid-template-columns:1fr!important}
+  .reviews-grid{grid-template-columns:1fr!important}
+  .team-grid{grid-template-columns:1fr!important}
+  .stories-grid{grid-template-columns:1fr!important}
+  .process-grid{grid-template-columns:1fr!important}
+  .nogo-grid{grid-template-columns:1fr!important}
+  .metrics-stack{grid-template-columns:1fr 1fr!important;gap:12px}
+  .hero{min-height:90vh;padding:120px 0 60px}
+  .hero-frame img{object-position:center 30%}
+  .partners-grid{grid-template-columns:repeat(2,1fr)!important}
+  .section{padding:60px 0}
+  .display{font-size:36px!important;line-height:1.1!important}
+  .display-md{font-size:28px!important;line-height:1.15!important}
+  .container{padding:0 16px}
+  .marquee-photo{width:160px;height:120px}
+}
+
+@media (max-width:480px){
+  .hero{min-height:85vh;padding:100px 0 50px}
+  .hero h1,.hero .display{font-size:32px!important}
+  .display-md{font-size:24px!important}
+  .feature-photo{min-height:180px!important}
+  .service-photo{min-height:160px!important}
+  .btn-cta{padding:14px 22px;font-size:14px}
+  .marquee-photo{width:140px;height:100px}
+  .footer-bottom{flex-direction:column;gap:12px;text-align:center}
+}
+
+@media (max-width:380px){
+  .hero h1,.hero .display{font-size:28px!important;line-height:1.05!important}
+  .display-md{font-size:22px!important}
+  .container{padding:0 14px}
+}
