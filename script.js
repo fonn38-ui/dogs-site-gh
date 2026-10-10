@@ -1,77 +1,96 @@
-/* PAWS HAVEN — script.js v6 (полная версия) */
+/* PAWS HAVEN — script.js v7 (видимо всё, даже без фото и JS) */
 (function(){
   "use strict";
 
-  function escapeHtml(s){return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]);}
+  function esc(s){return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]);}
+  function pad(n){return String(n).padStart(3,"0");}
 
-  // ===== Загрузка фото: placedog.net + Unsplash + локалка =====
-  const LOCAL_FALLBACK = [
+  // =================== СЕРВИС ФОТО (быстрый + 2-стоп fallback) ===================
+  // Picsum: 99% uptime, быстрый, не блокирует
+  // placedog: медленный но собачий
+  // Локалка: гарантия
+  // Таймаут короткий — 1.8s, потом fallback
+  const LOCAL = [
     "assets/breeds/husky_1.jpg","assets/breeds/corgi_1.jpg","assets/breeds/collie_2.jpg",
     "assets/breeds/collie_3.jpg","assets/breeds/retriever_2.jpg",
     "assets/gallery/jackrussell.jpg","assets/gallery/cavalier.jpg"
   ];
+  const DOGS = [
+    "https://placedog.net/640/480?id=82","https://placedog.net/640/480?id=137","https://placedog.net/640/480?id=108",
+    "https://placedog.net/640/480?id=55","https://placedog.net/640/480?id=171","https://placedog.net/640/480?id=29",
+    "https://placedog.net/640/480?id=66","https://placedog.net/640/480?id=144"
+  ];
 
-  function pad(n){return String(n).padStart(3,"0");}
-
-  // пытаемся placedog.net — 3 попытки (id 50-180)
-  async function tryPlacedog(w, h, seed){
-    const id = (seed % 150) + 50;
-    const url = `https://placedog.net/${w}/${h}?id=${id}&t=${Date.now()}`;
-    return await tryImg(url, 4500);
-  }
-  async function tryImg(url, timeout=5000){
+  function tryImg(url, timeout){
     return new Promise(res=>{
-      const img = new Image();
+      const img=new Image();
       let done=false;
-      const ok=()=>{if(done)return;done=true;res(img.src);};
-      const fail=()=>{if(done)return;done=true;res(null);};
-      img.onload=()=>{ if(img.naturalWidth>50) ok(); else fail(); };
-      img.onerror=fail;
+      const ok=()=>{if(!done&&img.naturalWidth>40){done=true;res(img.src);}};
+      const fail=()=>{if(!done){done=true;res(null);}};
+      img.onload=ok; img.onerror=fail;
       img.src=url;
       setTimeout(fail,timeout);
     });
   }
-  async function localFallback(seed=0){
-    const pick = LOCAL_FALLBACK[seed % LOCAL_FALLBACK.length];
-    const r = await tryImg(pick, 3000);
-    return r || pick;
-  }
-  async function getPhoto(seed=0, w=1200, h=800){
-    const u = await tryPlacedog(w, h, seed*7+1);
-    if (u) return u;
-    return await localFallback(seed);
+
+  // ПАРАЛЛЕЛЬНАЯ загрузка всех попыток, возвращаем первый успешный
+  function raceImg(urls, timeout){
+    return new Promise(res=>{
+      let answered=false;
+      const finalize=(v)=>{if(!answered){answered=true;res(v);}};
+      const try1=(u)=>tryImg(u, timeout).then(v=>v&&finalize(v));
+      urls.forEach(try1);
+      // Гарантированный fallback по таймауту
+      setTimeout(()=>finalize(null), timeout+200);
+    });
   }
 
-  // ===== HERO КИНО-СЛАЙДЕР =====
+  async function getPhoto(seed, w, h){
+    const idx=Math.abs(seed*7+3)%DOGS.length;
+    const placedogUrl = `${DOGS[idx]}&t=${seed}`; // ignored by server
+    const picsumUrl   = `https://picsum.photos/seed/dog${seed}/${w}/${h}`;
+    const localUrl    = LOCAL[seed%LOCAL.length];
+    // Picsum обычно быстрее — пробуем его первым
+    const got = await raceImg([picsumUrl, placedogUrl, localUrl], 2200);
+    if (got) return got;
+    return localUrl; // Гарантированный последний резерв
+  }
+
+  // =================== HERO КИНО ===================
   async function setupHeroCinema(){
     const frames = document.querySelectorAll(".hero-frame");
     const thumbs = document.getElementById("heroThumbs");
+    if (!frames.length) return;
     let cur = 0;
-    const urls = [];
-    for(let i=0;i<frames.length;i++){
-      const url = await getPhoto(i*5+1, 1600, 1000);
-      urls.push(url);
-      const img = document.createElement("img");
-      img.src=url; img.alt="Собака";
-      frames[i].querySelector(".hero-loader")?.remove();
-      frames[i].appendChild(img);
+
+    // Запускаем загрузку фото ПАРАЛЛЕЛЬНО
+    const urls = await Promise.all(
+      [...frames].map((_,i)=>getPhoto(i*5+1, 1600, 1000))
+    );
+
+    [...frames].forEach((f,i)=>{
+      f.querySelector(".hero-loader")?.remove();
+      const img=document.createElement("img");
+      img.src=urls[i]; img.alt="Собака";
+      if (urls[i]) img.classList.add("loaded");
+      f.appendChild(img);
       if (thumbs){
         const t=document.createElement("button");
         t.className="hero-thumb"+(i===0?" active":"");
-        t.style.backgroundImage=`url(${url})`;
+        t.style.backgroundImage=`url(${urls[i]})`;
         t.dataset.i=i;
         thumbs.appendChild(t);
       }
-    }
+    });
     frames[0].classList.add("active");
-    let timer=setInterval(tick,3800);
-    function tick(){
+    const tick=()=>{
       const next=(cur+1)%frames.length;
       frames[cur].classList.remove("active");
       frames[next].classList.add("active");
       thumbs?.querySelectorAll(".hero-thumb").forEach((t,j)=>t.classList.toggle("active", j===next));
       cur=next;
-    }
+    };
+    let timer=setInterval(tick,3800);
     const hero=document.querySelector(".hero");
     hero.addEventListener("mouseenter",()=>clearInterval(timer));
     hero.addEventListener("mouseleave",()=>{timer=setInterval(tick,3800)});
@@ -96,151 +115,151 @@
     });
   }
 
-  // ===== FEATURES фото =====
-  async function setupFeaturePhotos(){
-    const slots = document.querySelectorAll("[data-photo^='card-']");
-    for(let i=0;i<slots.length;i++){
-      const slot=slots[i];
-      const url = await getPhoto(i*7+11, 800, 450);
+  // =================== УНИВЕРСАЛЬНЫЙ СЕТ ФОТО ===================
+  async function fillPhotos(selector, seedOffset, w, h){
+    const slots=document.querySelectorAll(selector);
+    if (!slots.length) return;
+    // Параллельно
+    await Promise.all([...slots].map(async(s,i)=>{
+      const url=await getPhoto(i+seedOffset, w, h);
       const img=document.createElement("img");
       img.src=url; img.alt=""; img.loading="lazy";
-      img.onload=()=>{img.classList.add("loaded");slot.querySelector(".story-img-shimmer")?.remove();};
-      slot.appendChild(img);
-    }
+      img.classList.add("loaded");
+      s.appendChild(img);
+      s.querySelector(".story-img-shimmer, .lb-img-shimmer, .placeholder")?.remove();
+    }));
   }
 
-  // ===== ABOUT SIDE PHOTO =====
-  async function setupAboutPhoto(){
-    const slot=document.querySelector("[data-photo='about-side']");
-    if(!slot) return;
-    const url=await getPhoto(99, 1000, 750);
-    const img=document.createElement("img");
-    img.src=url; img.alt="";
-    img.onload=()=>img.classList.add("loaded");
-    slot.appendChild(img);
-    let n=0;
-    setInterval(async()=>{
-      n++;
-      const newUrl=await getPhoto(99+n*11, 1000, 750);
-      img.style.opacity=0;
-      setTimeout(()=>{
-        img.onload=()=>{img.style.opacity=1};
-        img.src=newUrl;
-      },600);
-    }, 8000);
-  }
-
-  // ===== LOCATION PHOTO =====
-  async function setupLocationPhoto(){
-    const slot=document.querySelector("[data-photo='location']");
-    if(!slot) return;
-    const url=await getPhoto(151, 1000, 1250);
-    const img=document.createElement("img");
-    img.src=url; img.alt="";
-    img.onload=()=>img.classList.add("loaded");
-    slot.appendChild(img);
-  }
-
-  // ====== PROCESS STEPS (4 шага) ======
+  // =================== RENDER STATIC ===================
   function renderProcess(){
     const grid=document.getElementById("processGrid");
     if(!grid) return;
     grid.innerHTML = window.PAWS.processSteps.map(s=>`
-      <article class="process-step reveal">
-        <span class="step-num">${escapeHtml(s.n)}</span>
+      <article class="process-step visible">
+        <span class="step-num">${esc(s.n)}</span>
         <span class="step-icon">${s.icon}</span>
-        <h4>${escapeHtml(s.title)}</h4>
-        <p>${escapeHtml(s.text)}</p>
-      </article>
-    `).join("");
+        <h4>${esc(s.title)}</h4>
+        <p>${esc(s.text)}</p>
+      </article>`).join("");
   }
-
-  // ====== DAY TIMELINE ======
   function renderDayTimeline(){
     const host=document.getElementById("dayTimeline");
     if(!host) return;
     host.innerHTML = window.PAWS.daySchedule.map(d=>`
-      <div class="day-item reveal">
-        <div class="day-time">${escapeHtml(d.time)}</div>
+      <div class="day-item visible">
+        <div class="day-time">${esc(d.time)}</div>
         <div class="day-content">
-          <h4><span class="emoji">${d.emoji}</span>${escapeHtml(d.title)}</h4>
-          <p>${escapeHtml(d.text)}</p>
+          <h4><span class="emoji">${d.emoji}</span>${esc(d.title)}</h4>
+          <p>${esc(d.text)}</p>
         </div>
-      </div>
-    `).join("");
+      </div>`).join("");
   }
-
-  // ====== NO-GO ======
   function renderNoGo(){
     const grid=document.getElementById("nogoGrid");
     if(!grid) return;
     grid.innerHTML = window.PAWS.noGo.map(n=>`
-      <article class="nogo-card reveal">
+      <article class="nogo-card visible">
         <div class="nogo-icon">${n.icon}</div>
         <div>
-          <h4>${escapeHtml(n.title)}</h4>
-          <p>${escapeHtml(n.text)}</p>
+          <h4>${esc(n.title)}</h4>
+          <p>${esc(n.text)}</p>
         </div>
-      </article>
-    `).join("");
+      </article>`).join("");
   }
-
-  // ====== SERVICES (с фото и иконкой) ======
-  async function renderServices(){
+  function renderReviews(){
+    const grid=document.getElementById("reviewsGrid");
+    if(!grid) return;
+    grid.innerHTML = window.PAWS.testimonials.map(t=>{
+      const initials = t.name.split(" ").map(s=>s[0]).join("");
+      return `
+        <article class="review-card visible">
+          <div class="review-stars">★ ★ ★ ★ ★</div>
+          <p class="review-text">${esc(t.text)}</p>
+          <div class="review-author">
+            <div class="review-avatar">${esc(initials)}</div>
+            <div>
+              <div class="review-name">${esc(t.name)}</div>
+              <div class="review-dog">${esc(t.dog)}</div>
+            </div>
+          </div>
+        </article>`;
+    }).join("");
+  }
+  function renderTeam(){
+    const grid=document.getElementById("teamGrid");
+    if(!grid) return;
+    grid.innerHTML = window.PAWS.team.map(m=>{
+      const initials = m.name.split(" ").map(s=>s[0]).join("");
+      return `
+        <article class="team-card visible">
+          <div class="team-avatar">${esc(initials)}</div>
+          <h4>${esc(m.name)}</h4>
+          <div class="team-role">${esc(m.role)}</div>
+          <p class="team-bio">${esc(m.bio)}</p>
+        </article>`;
+    }).join("");
+  }
+  function renderFaq(){
+    const list=document.getElementById("faqList");
+    if(!list) return;
+    list.innerHTML = window.PAWS.faq.map(f=>`
+      <details class="faq-item visible">
+        <summary class="faq-q">${esc(f.q)}</summary>
+        <div class="faq-a">${esc(f.a)}</div>
+      </details>`).join("");
+  }
+  function renderLocation(){
+    const L=window.PAWS.location;
+    if(!document.getElementById("location")) return;
+    document.getElementById("loc-address").textContent=L.address;
+    document.getElementById("loc-nearest").textContent=L.nearest;
+    document.getElementById("loc-metro").textContent=L.metro;
+    document.getElementById("loc-parking").textContent=L.parking;
+    document.getElementById("loc-features").innerHTML = L.features.map(f=>`<li>${esc(f)}</li>`).join("");
+  }
+  function renderPartners(){
+    const grid=document.getElementById("partnersGrid");
+    if(!grid) return;
+    grid.innerHTML = window.PAWS.partners.map(p=>`<div class="partner-card visible">${esc(p)}</div>`).join("");
+  }
+  function renderServices(){
     const grid=document.getElementById("servicesGrid");
     if(!grid) return;
     grid.innerHTML = window.PAWS.services.map((s,i)=>`
-      <article class="service-card reveal">
-        <div class="service-photo" data-service-photo="${i}"></div>
+      <article class="service-card visible">
+        <div class="service-photo" data-service-photo="${i}"><div class="placeholder">${s.icon}</div></div>
         <div class="service-body">
           <span class="service-icon">${s.icon}</span>
-          <h4>${escapeHtml(s.title)}</h4>
-          <p>${escapeHtml(s.text)}</p>
+          <h4>${esc(s.title)}</h4>
+          <p>${esc(s.text)}</p>
         </div>
-      </article>
-    `).join("");
-    for(let i=0;i<window.PAWS.services.length;i++){
-      const slot=document.querySelector(`[data-service-photo="${i}"]`);
-      if(!slot) continue;
-      slot.innerHTML = `<div class="story-img-shimmer"></div>`;
-      const url = await getPhoto(i*13+5, 600, 360);
-      const img=document.createElement("img");
-      img.src=url; img.alt=""; img.loading="lazy";
-      img.onload=()=>{img.classList.add("loaded");slot.querySelector(".story-img-shimmer")?.remove();};
-      slot.appendChild(img);
-    }
+      </article>`).join("");
   }
 
-  // ====== STORIES ======
+  // =================== STORIES ===================
   let currentStory=0;
   async function renderStories(){
     const grid=document.getElementById("storiesGrid");
     if(!grid) return;
     const all=window.PAWS.stories;
 
-    const htmlPromises = all.map(async(s,i)=>{
-      const url=await getPhoto(i*17+3, 800, 640);
-      return `
-        <article class="story-card reveal" data-i="${i}">
-          <div class="story-img">
-            <img src="${url}" alt="${escapeHtml(s.name)}" loading="lazy">
+    // СНАЧАЛА рендерим HTML (видимое), параллельно фото
+    grid.innerHTML = all.map((s,i)=>`
+      <article class="story-card visible" data-i="${i}">
+        <div class="story-img" data-story-photo="${i}"><div class="placeholder">${s.name.charAt(0)}</div></div>
+        <div class="story-body">
+          <h4>${esc(s.name)}</h4>
+          <div class="story-breed">${esc(s.breed)}</div>
+          <p class="story-text">${esc(s.text)}</p>
+          <div class="story-meta">
+            <span class="story-days">📅 ${s.days} дней</span>
+            <button class="story-read" data-i="${i}">Читать историю →</button>
           </div>
-          <div class="story-body">
-            <h4>${escapeHtml(s.name)}</h4>
-            <div class="story-breed">${escapeHtml(s.breed)}</div>
-            <p class="story-text">${escapeHtml(s.text)}</p>
-            <div class="story-meta">
-              <span class="story-days">📅 ${s.days} дней</span>
-              <button class="story-read" data-i="${i}">Читать историю →</button>
-            </div>
-          </div>
-        </article>`;
-    });
-    grid.innerHTML=(await Promise.all(htmlPromises)).join("");
-    grid.querySelectorAll(".story-img img").forEach(img=>{
-      if(img.complete){img.classList.add("loaded")}
-      else img.addEventListener("load",()=>img.classList.add("loaded"));
-    });
+        </div>
+      </article>`).join("");
+
+    // Параллельная загрузка фото
+    fillPhotos("[data-story-photo]", 100, 800, 640);
 
     const count=document.getElementById("storiesCount");
     const update=()=>{
@@ -248,8 +267,8 @@
       count.textContent=`${pad(i+1)} / ${pad(all.length)}`;
       grid.querySelectorAll(".story-card").forEach((c,j)=>c.style.borderColor=j===i?"var(--accent)":"");
     };
-    document.getElementById("storiesPrev").addEventListener("click",()=>{currentStory--;update();});
-    document.getElementById("storiesNext").addEventListener("click",()=>{currentStory++;update();});
+    document.getElementById("storiesPrev")?.addEventListener("click",()=>{currentStory--;update();});
+    document.getElementById("storiesNext")?.addEventListener("click",()=>{currentStory++;update();});
     grid.addEventListener("click",e=>{
       const r=e.target.closest(".story-read");
       if(r){e.preventDefault();openLightbox(parseInt(r.dataset.i,10));return;}
@@ -259,18 +278,18 @@
     update();
   }
 
-  // ====== LIGHTBOX ======
+  // =================== LIGHTBOX ===================
   async function openLightbox(i){
     const s=window.PAWS.stories[i];
     if(!s) return;
     const box=document.getElementById("lightbox");
     const content=document.getElementById("lightboxContent");
     content.innerHTML=`
-      <div class="lb-img"><div class="lb-img-shimmer"></div></div>
+      <div class="lb-img" data-lb-photo><div class="placeholder">${s.name.charAt(0)}</div></div>
       <div class="lb-body">
-        <h3>${escapeHtml(s.name)}</h3>
-        <div class="lb-breed">${escapeHtml(s.breed)}</div>
-        <p class="lb-quote">«${escapeHtml(s.text)}»</p>
+        <h3>${esc(s.name)}</h3>
+        <div class="lb-breed">${esc(s.breed)}</div>
+        <p class="lb-quote">«${esc(s.text)}»</p>
         <div class="lb-meta">
           <span class="story-days">📅 ${s.days} дней под нашей крышей</span>
           <a class="story-read" href="#contact">Записаться →</a>
@@ -279,12 +298,7 @@
     box.classList.add("open");
     box.dataset.i=i;
     document.body.style.overflow="hidden";
-    const slot=box.querySelector(".lb-img");
-    const url = await getPhoto(i*23+11, 800, 800);
-    const img=document.createElement("img");
-    img.src=url; img.alt=escapeHtml(s.name);
-    img.onload=()=>{img.classList.add("loaded");slot.querySelector(".lb-img-shimmer")?.remove();};
-    slot.appendChild(img);
+    fillPhotos("[data-lb-photo]", i*23+11, 800, 800);
   }
   function closeLightbox(){
     document.getElementById("lightbox").classList.remove("open");
@@ -296,178 +310,105 @@
     openLightbox(i);
   }
   function setupLightbox(){
-    document.getElementById("lightboxClose").addEventListener("click",closeLightbox);
-    document.getElementById("lightboxPrev").addEventListener("click",()=>navLightbox(-1));
-    document.getElementById("lightboxNext").addEventListener("click",()=>navLightbox(1));
-    document.getElementById("lightbox").addEventListener("click",e=>{if(e.target.id==="lightbox") closeLightbox()});
+    document.getElementById("lightboxClose")?.addEventListener("click",closeLightbox);
+    document.getElementById("lightboxPrev")?.addEventListener("click",()=>navLightbox(-1));
+    document.getElementById("lightboxNext")?.addEventListener("click",()=>navLightbox(1));
+    document.getElementById("lightbox")?.addEventListener("click",e=>{if(e.target.id==="lightbox") closeLightbox()});
     document.addEventListener("keydown",e=>{
-      if(!document.getElementById("lightbox").classList.contains("open")) return;
+      if(!document.getElementById("lightbox")?.classList.contains("open")) return;
       if(e.key==="Escape") closeLightbox();
       if(e.key==="ArrowLeft") navLightbox(-1);
       if(e.key==="ArrowRight") navLightbox(1);
     });
   }
 
-  // ====== REVIEWS ======
-  function renderReviews(){
-    const grid=document.getElementById("reviewsGrid");
-    if(!grid) return;
-    grid.innerHTML = window.PAWS.testimonials.map(t=>{
-      const initials = t.name.split(" ").map(s=>s[0]).join("");
-      return `
-        <article class="review-card reveal">
-          <div class="review-stars">★ ★ ★ ★ ★</div>
-          <p class="review-text">${escapeHtml(t.text)}</p>
-          <div class="review-author">
-            <div class="review-avatar">${escapeHtml(initials)}</div>
-            <div>
-              <div class="review-name">${escapeHtml(t.name)}</div>
-              <div class="review-dog">${escapeHtml(t.dog)}</div>
-            </div>
-          </div>
-        </article>`;
-    }).join("");
-  }
-
-  // ====== TEAM ======
-  function renderTeam(){
-    const grid=document.getElementById("teamGrid");
-    if(!grid) return;
-    grid.innerHTML = window.PAWS.team.map(m=>{
-      const initials = m.name.split(" ").map(s=>s[0]).join("");
-      return `
-        <article class="team-card reveal">
-          <div class="team-avatar">${escapeHtml(initials)}</div>
-          <h4>${escapeHtml(m.name)}</h4>
-          <div class="team-role">${escapeHtml(m.role)}</div>
-          <p class="team-bio">${escapeHtml(m.bio)}</p>
-        </article>`;
-    }).join("");
-  }
-
-  // ====== LOCATION ======
-  function renderLocation(){
-    const L=window.PAWS.location;
-    if(!document.getElementById("location")) return;
-    document.getElementById("loc-address").textContent=L.address;
-    document.getElementById("loc-nearest").textContent=L.nearest;
-    document.getElementById("loc-metro").textContent=L.metro;
-    document.getElementById("loc-parking").textContent=L.parking;
-    document.getElementById("loc-features").innerHTML = L.features.map(f=>`<li>${escapeHtml(f)}</li>`).join("");
-  }
-
-  // ====== FAQ ======
-  function renderFaq(){
-    const list=document.getElementById("faqList");
-    if(!list) return;
-    list.innerHTML = window.PAWS.faq.map((f,i)=>`
-      <details class="faq-item reveal">
-        <summary class="faq-q">${escapeHtml(f.q)}</summary>
-        <div class="faq-a">${escapeHtml(f.a)}</div>
-      </details>
-    `).join("");
-  }
-
-  // ====== MARQUEE с фото ======
+  // =================== MARQUEE ФОТО ===================
   async function setupMarqueePhotos(){
     const track1=document.getElementById("marqueePhotos");
     const track2=document.getElementById("marqueePhotos2");
     if(!track1||!track2) return;
-    const emojis=["🐕","🐶","🐾","🦴","🐕‍🦺","🐩","🐶","🐕","🐾","🦮"];
+    const emojis=["🐕","🐶","🐾","🦴","🐕‍🦺","🐩","🦮","💛"];
 
-    async function build(host){
+    // Параллельно — сразу 28 фото
+    const all = await Promise.all(
+      [...Array(14)].map((_,i)=>getPhoto(i*11+50, 600, 420))
+    );
+    const build=(host)=>{
       const track=document.createElement("div");
       track.className="marquee-track-photos";
-      const imgs=[];
-      for(let i=0;i<14;i++){
-        const url=await getPhoto(i*11+50, 600, 420);
-        imgs.push(url);
-      }
-      const html = imgs.concat(imgs).map((u,i)=>{
+      track.innerHTML = all.concat(all).map((u,i)=>{
         const e = emojis[i%emojis.length];
         return `<div class="marquee-photo">
           <div class="placeholder">${e}</div>
-          <img src="${u}" alt="" loading="lazy">
+          <img src="${u}" alt="" loading="lazy" class="loaded">
         </div>`;
       }).join("");
-      track.innerHTML=html;
-      track.querySelectorAll("img").forEach(img=>{
-        if(img.complete) img.classList.add("loaded");
-        else img.addEventListener("load",()=>{
-          img.classList.add("loaded");
-          img.previousElementSibling?.remove();
-        });
-      });
       host.appendChild(track);
-    }
+    };
     build(track1); build(track2);
   }
 
-  // ====== PARTNERS ======
-  function renderPartners(){
-    const grid=document.getElementById("partnersGrid");
-    if(!grid) return;
-    grid.innerHTML = window.PAWS.partners.map(p=>`<div class="partner-card reveal">${escapeHtml(p)}</div>`).join("");
+  // =================== SERVICES PHOTO ===================
+  async function setupServicePhotos(){
+    const slots=document.querySelectorAll("[data-service-photo]");
+    if (!slots.length) return;
+    await Promise.all([...slots].map(async(s,i)=>{
+      const url=await getPhoto(i*13+5, 600, 360);
+      const img=document.createElement("img");
+      img.src=url; img.alt=""; img.loading="lazy";
+      img.classList.add("loaded");
+      s.appendChild(img);
+      s.querySelector(".placeholder")?.remove();
+    }));
   }
 
-  // ====== FORM ======
+  // =================== ABOUT PHOTO (ротация) ===================
+  async function setupAboutPhoto(){
+    const slot=document.querySelector("[data-photo='about-side']");
+    if(!slot) return;
+    const url=await getPhoto(99, 1000, 750);
+    const img=document.createElement("img");
+    img.src=url; img.alt="";
+    img.classList.add("loaded");
+    slot.appendChild(img);
+    let n=0;
+    setInterval(async()=>{
+      n++;
+      const newUrl=await getPhoto(99+n*11, 1000, 750);
+      img.style.opacity=0;
+      setTimeout(()=>{img.src=newUrl;img.style.opacity=1;},600);
+    }, 8000);
+  }
+
+  // =================== LOCATION PHOTO ===================
+  async function setupLocationPhoto(){
+    const slot=document.querySelector("[data-photo='location']");
+    if(!slot) return;
+    const url=await getPhoto(151, 1000, 1250);
+    const img=document.createElement("img");
+    img.src=url; img.alt="";
+    img.classList.add("loaded");
+    slot.appendChild(img);
+  }
+
+  // =================== FORM ===================
   function setupForm(){
     const form=document.getElementById("contactForm");
     if(!form) return;
     form.addEventListener("submit",e=>{
       e.preventDefault();
       const data=Object.fromEntries(new FormData(form).entries());
-      alert(`Спасибо, ${data.name}!\n\nЗаявка на ${escapeHtml(data.format)} для «${escapeHtml(data.dog||"собаки")}».\nПерезвоним в течение часа на ${escapeHtml(data.phone)}.`);
+      alert(`Спасибо, ${data.name}!\n\nЗаявка на ${esc(data.format)} для «${esc(data.dog||"собаки")}».\nПерезвоним в течение часа на ${esc(data.phone)}.`);
       form.reset();
     });
   }
 
-  // ====== HEADER ======
+  // =================== HEADER / BURGER ===================
   function setupHeader(){
     const h=document.getElementById("site-header");
     if(!h) return;
     window.addEventListener("scroll",()=>h.classList.toggle("scrolled",window.scrollY>60));
   }
-
-  // ====== REVEAL ======
-  function setupReveal(){
-    const items=document.querySelectorAll(".reveal, .feature-card, .service-card, .metric-card, .story-card, .partner-card, .stories-tag-cloud .tag, .process-step, .day-item, .nogo-card, .review-card, .team-card, .faq-item");
-    items.forEach(i=>i.classList.add("reveal"));
-    const io=new IntersectionObserver(entries=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){
-          e.target.classList.add("visible");
-          io.unobserve(e.target);
-        }
-      });
-    },{threshold:0.12});
-    items.forEach(i=>io.observe(i));
-  }
-
-  // ====== COUNT-UP ======
-  function setupCountUp(){
-    const els=document.querySelectorAll("[data-count]");
-    const io=new IntersectionObserver(entries=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){
-          const el=e.target;
-          const target=parseInt(el.dataset.count,10)||0;
-          const dur=900; const t0=performance.now();
-          const tick=(t)=>{
-            const p=Math.min((t-t0)/dur,1);
-            el.textContent=Math.floor(target*(1-Math.pow(1-p,3)));
-            if(p<1) requestAnimationFrame(tick);
-            else el.textContent=target;
-          };
-          requestAnimationFrame(tick);
-          io.unobserve(el);
-        }
-      });
-    },{threshold:0.5});
-    els.forEach(i=>io.observe(i));
-  }
-
-  // ====== BURGER ======
   function setupBurger(){
     const btn=document.querySelector(".burger");
     const top=document.querySelector(".header");
@@ -476,14 +417,53 @@
     document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",()=>top.classList.remove("mobile-open")));
   }
 
-  // ====== START ======
+  // =================== COUNT-UP (count от финального числа в HTML) ===================
+  function setupCountUp(){
+    const els=document.querySelectorAll("[data-count]");
+    if (!els.length) return;
+    // Сначала убедимся что HTML содержит финальное значение (на случай если в разметке был "0")
+    els.forEach(el=>{
+      const target=parseInt(el.dataset.count,10)||0;
+      el.textContent=target; // показываем сразу финальное
+    });
+    // Анимируем от 0 до target при появлении в viewport
+    const animate=(el)=>{
+      const target=parseInt(el.dataset.count,10)||0;
+      if (target<=0) return;
+      el.textContent=0;
+      const dur=1200; const t0=performance.now();
+      const tick=(t)=>{
+        const p=Math.min((t-t0)/dur,1);
+        el.textContent=Math.floor(target*(1-Math.pow(1-p,3)));
+        if(p<1) requestAnimationFrame(tick);
+        else el.textContent=target;
+      };
+      requestAnimationFrame(tick);
+    };
+    if (!("IntersectionObserver" in window)){
+      els.forEach(animate);
+      return;
+    }
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          animate(e.target);
+          io.unobserve(e.target);
+        }
+      });
+    },{threshold:0.3});
+    els.forEach(i=>io.observe(i));
+  }
+
+  // =================== START ===================
   document.addEventListener("DOMContentLoaded", async()=>{
     setupHeader();
     setupBurger();
     setupLightbox();
-    setupReveal();
     setupCountUp();
     setupForm();
+
+    // Рендерим всё текстовое СРАЗУ (без фото)
     renderPartners();
     renderProcess();
     renderDayTimeline();
@@ -492,15 +472,18 @@
     renderTeam();
     renderFaq();
     renderLocation();
+    renderServices();
+    renderStories();
 
-    await setupHeroCinema();
-    await renderStories();
-    await renderServices();
-    await setupFeaturePhotos();
-    await setupAboutPhoto();
-    await setupLocationPhoto();
-    await setupMarqueePhotos();
+    // Фото — параллельно
+    await Promise.all([
+      setupHeroCinema(),
+      setupServicePhotos(),
+      setupAboutPhoto(),
+      setupLocationPhoto(),
+      setupMarqueePhotos()
+    ]);
 
-    console.log("🐾 Paws Haven v6 loaded (full version).");
+    console.log("🐾 Paws Haven v7 loaded (all-visible edition).");
   });
 })();
