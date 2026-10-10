@@ -447,3 +447,15 @@ img.loaded{animation:none}
   body{padding-top:60px}
   .hero{padding-top:80px;min-height:calc(100vh - 60px)}
 }
+
+/* ===== V18: header nav visibility on desktop ===== */
+@media (min-width:1081px){
+  .burger{display:none!important}
+  .nav{display:flex!important}
+  .btn-cta-header{display:inline-flex!important}
+}
+@media (max-width:1080px){
+  .nav{display:none}
+  .btn-cta-header{display:none}
+  .burger{display:flex!important;align-items:center;justify-content:center}
+}
