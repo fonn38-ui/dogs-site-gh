@@ -28,9 +28,13 @@
 
     [...frames].forEach((f,i)=>{
       f.querySelector(".hero-loader")?.remove();
+      // Сразу ставим background-image — будет видно до загрузки img
+      f.style.backgroundImage = `url(${urls[i]})`;
+      f.style.backgroundSize = "cover";
+      f.style.backgroundPosition = "center";
       const img=document.createElement("img");
-      img.src=urls[i]; img.alt="Собака"; img.loading="eager";
-      img.classList.add("loaded");
+      img.src=urls[i]; img.alt=""; img.loading="eager"; img.decoding="async";
+      img.style.cssText="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;transition:transform .8s ease";
       f.appendChild(img);
       if (thumbs){
         const t=document.createElement("button");
