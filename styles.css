@@ -358,3 +358,13 @@ html{scroll-behavior:smooth}
   .metric-card strong{font-size:38px}
   .day-timeline{padding-left:40px}
 }
+
+
+/* ====== V9: real photos from CDN ====== */
+img[loading="lazy"], img[loading="eager"]{display:block;width:100%;height:100%;object-fit:cover}
+img.loaded{animation:none}
+.story-img img{transition:transform .6s ease}
+.story-card:hover .story-img img{transform:scale(1.06)}
+.service-photo{position:relative;overflow:hidden;aspect-ratio:5/4;background:linear-gradient(135deg,#1a2238,#0F1424)}
+.service-photo img{transition:transform .6s ease}
+.service-card:hover .service-photo img{transform:scale(1.06)}

@@ -1,37 +1,34 @@
-/* PAWS HAVEN — script.js v7 (видимо всё, даже без фото и JS) */
+/* PAWS HAVEN — script.js v9 (real photos from thedogapi CDN) */
 (function(){
   "use strict";
 
   function esc(s){return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]);}
   function pad(n){return String(n).padStart(3,"0");}
 
-  // =================== СЕРВИС ФОТО (ТОЛЬКО ЛОКАЛЬНЫЕ SVG) ===================
-  // 30 SVG-фото в /assets/dogs/ — 4 KB каждое, мгновенная загрузка, ноль сети
-  const DOG_PHOTOS = [];
-  for (let i = 1; i <= 30; i++) DOG_PHOTOS.push(`assets/dogs/dog_${String(i).padStart(2,"0")}.svg`);
+  // ====== РЕАЛЬНЫЕ ФОТО СОБАК С CDN (50 уникальных URL) ======
+  const DOG_PHOTOS = ["https://cdn2.thedogapi.com/images/wRP-CQQJy.jpg", "https://cdn2.thedogapi.com/images/BkrJjgcV7_1280.jpg", "https://cdn2.thedogapi.com/images/J4H-oD_7x.jpg", "https://cdn2.thedogapi.com/images/pB43UCgl4.jpg", "https://cdn4.thedogapi.com/optimized/56j27IEHO8.jpg", "https://cdn2.thedogapi.com/images/YbXK-k96Y.jpg", "https://cdn2.thedogapi.com/images/By-GQTaNQ.gif", "https://cdn2.thedogapi.com/images/HyOjge5Vm_1280.jpg", "https://cdn4.thedogapi.com/optimized/AT2BZ19dCG.jpg", "https://cdn2.thedogapi.com/images/r12d7apV7.gif", "https://cdn4.thedogapi.com/optimized/ifO0hUoW3G.jpg", "https://cdn2.thedogapi.com/images/bEQBV6y9Q.jpg", "https://cdn4.thedogapi.com/optimized/c3a2TB0nzo.jpg", "https://cdn2.thedogapi.com/images/BkKZWlcVX_1280.jpg", "https://cdn2.thedogapi.com/images/Q72V090BS.jpg", "https://cdn4.thedogapi.com/optimized/w7RJ7eRzvW.jpg", "https://cdn2.thedogapi.com/images/Z8LiOtceX.jpg", "https://cdn4.thedogapi.com/optimized/OnOywWfsh1.jpg", "https://cdn2.thedogapi.com/images/BJ2Wq664X.gif", "https://cdn2.thedogapi.com/images/42QrDrylc.jpg", "https://cdn4.thedogapi.com/optimized/sKx0rFHMRN.jpg", "https://cdn4.thedogapi.com/optimized/ZZDmX3JmpP.jpg", "https://cdn4.thedogapi.com/optimized/kjHLge9m58.jpg", "https://cdn4.thedogapi.com/optimized/wnXnSQ9sTP.jpg", "https://cdn2.thedogapi.com/images/jJIqSF3mP.jpg", "https://cdn2.thedogapi.com/images/rk9k4aTNm.gif", "https://cdn2.thedogapi.com/images/DbcfkQrav.jpg", "https://cdn2.thedogapi.com/images/HJAFgxcNQ_1280.jpg", "https://cdn2.thedogapi.com/images/r1dgtOnBm_1280.jpg", "https://cdn2.thedogapi.com/images/S1T8Ee9Nm_1280.jpg", "https://cdn4.thedogapi.com/optimized/CQUHaShvmM.jpg", "https://cdn2.thedogapi.com/images/SyYtQe5V7_1280.jpg", "https://cdn2.thedogapi.com/images/UZtLVvNhE.jpg", "https://cdn4.thedogapi.com/optimized/61r5MvNDov.jpg", "https://cdn2.thedogapi.com/images/Hyv-ne94m_1280.jpg", "https://cdn2.thedogapi.com/images/12GTwG4Bj.jpg", "https://cdn4.thedogapi.com/optimized/5BVhG81gSe.jpg", "https://cdn4.thedogapi.com/optimized/R5fIKpkyhH.jpg", "https://cdn4.thedogapi.com/optimized/G7Ja3j7xAo.jpg", "https://cdn2.thedogapi.com/images/VSraIEQGd.jpg", "https://cdn4.thedogapi.com/optimized/HM6Q4EFzx5.jpg", "https://cdn2.thedogapi.com/images/ELeE5ayvN.jpg", "https://cdn2.thedogapi.com/images/Hk0Jfe5VQ_1280.jpg", "https://cdn4.thedogapi.com/optimized/JF4NsbSm9C.jpg", "https://cdn4.thedogapi.com/optimized/We2yW9Ke0s.jpg", "https://cdn2.thedogapi.com/images/SyRe4xcN7_1280.jpg", "https://cdn2.thedogapi.com/images/B1pDZx9Nm_1280.jpg", "https://cdn2.thedogapi.com/images/hOQCNqMDb.jpg", "https://cdn2.thedogapi.com/images/hYsMv3NQi.jpg", "https://cdn2.thedogapi.com/images/rkVlblcEQ_1280.jpg"];
 
   // Мгновенно возвращает URL — без fetch, без async
   function getPhoto(seed, w, h){
     return DOG_PHOTOS[Math.abs(seed) % DOG_PHOTOS.length];
   }
 
-  // =================== HERO КИНО ===================
+  // ====== HERO КИНО ======
   async function setupHeroCinema(){
     const frames = document.querySelectorAll(".hero-frame");
     const thumbs = document.getElementById("heroThumbs");
     if (!frames.length) return;
     let cur = 0;
 
-    // Запускаем загрузку фото ПАРАЛЛЕЛЬНО
-    const urls = await Promise.all(
-      [...frames].map((_,i)=>getPhoto(i*5+1, 1600, 1000))
-    );
+    const urls = frames.length>0 ? [
+      DOG_PHOTOS[0], DOG_PHOTOS[7], DOG_PHOTOS[14], DOG_PHOTOS[21]
+    ] : [];
 
     [...frames].forEach((f,i)=>{
       f.querySelector(".hero-loader")?.remove();
       const img=document.createElement("img");
-      img.src=urls[i]; img.alt="Собака";
-      if (urls[i]) img.classList.add("loaded");
+      img.src=urls[i]; img.alt="Собака"; img.loading="eager"; img.fetchpriority="high";
+      img.decoding="async";
       f.appendChild(img);
       if (thumbs){
         const t=document.createElement("button");
@@ -41,7 +38,22 @@
         thumbs.appendChild(t);
       }
     });
-    frames[0].classList.add("active");
+    // После загрузки — показать первый кадр
+    const allImgs = document.querySelectorAll(".hero-frame img");
+    let loaded = 0;
+    allImgs.forEach(im => {
+      im.addEventListener("load", () => {
+        im.classList.add("loaded");
+        loaded++;
+        if (loaded === 1) frames[0].classList.add("active");
+      });
+      im.addEventListener("error", () => { im.classList.add("loaded"); loaded++; if (loaded === 1) frames[0].classList.add("active"); });
+    });
+    // Failsafe — показать первый кадр через 0.5с на случай если onload не сработал
+    setTimeout(() => {
+      if (!frames[0].classList.contains("active")) frames[0].classList.add("active");
+    }, 500);
+
     const tick=()=>{
       const next=(cur+1)%frames.length;
       frames[cur].classList.remove("active");
@@ -74,22 +86,22 @@
     });
   }
 
-  // =================== УНИВЕРСАЛЬНЫЙ СЕТ ФОТО ===================
-  async function fillPhotos(selector, seedOffset, w, h){
+  // ====== ЗАПОЛНЕНИЕ ФОТО (lazy-load, параллельно) ======
+  async function fillPhotos(selector, seedOffset){
     const slots=document.querySelectorAll(selector);
     if (!slots.length) return;
-    // Параллельно
-    await Promise.all([...slots].map(async(s,i)=>{
-      const url=getPhoto(i+seedOffset, w, h);
+    slots.forEach((s,i)=>{
+      const url=getPhoto(i+seedOffset);
       const img=document.createElement("img");
-      img.src=url; img.alt=""; img.loading="lazy";
+      img.src=url; img.alt=""; img.loading="lazy"; img.decoding="async";
       img.classList.add("loaded");
       s.appendChild(img);
-      s.querySelector(".story-img-shimmer, .lb-img-shimmer, .placeholder")?.remove();
-    }));
+      const ph = s.querySelector(".placeholder, .story-img-shimmer, .lb-img-shimmer");
+      if (ph) ph.remove();
+    });
   }
 
-  // =================== RENDER STATIC ===================
+  // ====== RENDER STATIC ======
   function renderProcess(){
     const grid=document.getElementById("processGrid");
     if(!grid) return;
@@ -195,30 +207,31 @@
       </article>`).join("");
   }
 
-  // =================== STORIES ===================
+  // ====== STORIES ======
   let currentStory=0;
-  async function renderStories(){
+  function renderStories(){
     const grid=document.getElementById("storiesGrid");
     if(!grid) return;
     const all=window.PAWS.stories;
 
-    // СНАЧАЛА рендерим HTML (видимое), параллельно фото
-    grid.innerHTML = all.map((s,i)=>`
-      <article class="story-card visible" data-i="${i}">
-        <div class="story-img" data-story-photo="${i}"><div class="placeholder">${s.name.charAt(0)}</div></div>
-        <div class="story-body">
-          <h4>${esc(s.name)}</h4>
-          <div class="story-breed">${esc(s.breed)}</div>
-          <p class="story-text">${esc(s.text)}</p>
-          <div class="story-meta">
-            <span class="story-days">📅 ${s.days} дней</span>
-            <button class="story-read" data-i="${i}">Читать историю →</button>
+    grid.innerHTML = all.map((s,i)=>{
+      const url=DOG_PHOTOS[(i*3+5)%DOG_PHOTOS.length];
+      return `
+        <article class="story-card visible" data-i="${i}">
+          <div class="story-img">
+            <img src="${url}" alt="${esc(s.name)}" loading="lazy" decoding="async" class="loaded">
           </div>
-        </div>
-      </article>`).join("");
-
-    // Параллельная загрузка фото
-    fillPhotos("[data-story-photo]", 100, 800, 640);
+          <div class="story-body">
+            <h4>${esc(s.name)}</h4>
+            <div class="story-breed">${esc(s.breed)}</div>
+            <p class="story-text">${esc(s.text)}</p>
+            <div class="story-meta">
+              <span class="story-days">📅 ${s.days} дней</span>
+              <button class="story-read" data-i="${i}">Читать историю →</button>
+            </div>
+          </div>
+        </article>`;
+    }).join("");
 
     const count=document.getElementById("storiesCount");
     const update=()=>{
@@ -237,14 +250,17 @@
     update();
   }
 
-  // =================== LIGHTBOX ===================
-  async function openLightbox(i){
+  // ====== LIGHTBOX ======
+  function openLightbox(i){
     const s=window.PAWS.stories[i];
     if(!s) return;
     const box=document.getElementById("lightbox");
     const content=document.getElementById("lightboxContent");
+    const url=DOG_PHOTOS[(i*7+11)%DOG_PHOTOS.length];
     content.innerHTML=`
-      <div class="lb-img" data-lb-photo><div class="placeholder">${s.name.charAt(0)}</div></div>
+      <div class="lb-img">
+        <img src="${url}" alt="${esc(s.name)}" loading="lazy" decoding="async" class="loaded">
+      </div>
       <div class="lb-body">
         <h3>${esc(s.name)}</h3>
         <div class="lb-breed">${esc(s.breed)}</div>
@@ -257,7 +273,6 @@
     box.classList.add("open");
     box.dataset.i=i;
     document.body.style.overflow="hidden";
-    fillPhotos("[data-lb-photo]", i*23+11, 800, 800);
   }
   function closeLightbox(){
     document.getElementById("lightbox").classList.remove("open");
@@ -281,25 +296,21 @@
     });
   }
 
-  // =================== MARQUEE ФОТО ===================
-  async function setupMarqueePhotos(){
+  // ====== MARQUEE ======
+  function setupMarqueePhotos(){
     const track1=document.getElementById("marqueePhotos");
     const track2=document.getElementById("marqueePhotos2");
     if(!track1||!track2) return;
-    const emojis=["🐕","🐶","🐾","🦴","🐕‍🦺","🐩","🦮","💛"];
-
-    // Параллельно — сразу 28 фото
-    const all = await Promise.all(
-      [...Array(14)].map((_,i)=>getPhoto(i*11+50, 600, 420))
-    );
+    const emojis=["🐕","🐶","🐾","🦴","🐩","🦮","🐕‍🦺","💛"];
+    // 14 разных фото
+    const selected = [...Array(14)].map((_,i) => DOG_PHOTOS[(i*3+2)%DOG_PHOTOS.length]);
     const build=(host)=>{
       const track=document.createElement("div");
       track.className="marquee-track-photos";
-      track.innerHTML = all.concat(all).map((u,i)=>{
+      track.innerHTML = selected.concat(selected).map((u,i)=>{
         const e = emojis[i%emojis.length];
         return `<div class="marquee-photo">
-          <div class="placeholder">${e}</div>
-          <img src="${u}" alt="" loading="lazy" class="loaded">
+          <img src="${u}" alt="" loading="lazy" decoding="async" class="loaded">
         </div>`;
       }).join("");
       host.appendChild(track);
@@ -307,50 +318,50 @@
     build(track1); build(track2);
   }
 
-  // =================== SERVICES PHOTO ===================
-  async function setupServicePhotos(){
+  // ====== SERVICES PHOTO ======
+  function setupServicePhotos(){
     const slots=document.querySelectorAll("[data-service-photo]");
     if (!slots.length) return;
-    await Promise.all([...slots].map(async(s,i)=>{
-      const url=getPhoto(i*13+5, 600, 360);
+    slots.forEach((s,i)=>{
+      const url=DOG_PHOTOS[(i*5+8)%DOG_PHOTOS.length];
       const img=document.createElement("img");
-      img.src=url; img.alt=""; img.loading="lazy";
+      img.src=url; img.alt=""; img.loading="lazy"; img.decoding="async";
       img.classList.add("loaded");
       s.appendChild(img);
       s.querySelector(".placeholder")?.remove();
-    }));
+    });
   }
 
-  // =================== ABOUT PHOTO (ротация) ===================
-  async function setupAboutPhoto(){
+  // ====== ABOUT PHOTO (ротация) ======
+  function setupAboutPhoto(){
     const slot=document.querySelector("[data-photo='about-side']");
     if(!slot) return;
-    const url=getPhoto(99, 1000, 750);
+    const url=DOG_PHOTOS[4%DOG_PHOTOS.length];
     const img=document.createElement("img");
-    img.src=url; img.alt="";
-    img.classList.add("loaded");
+    img.src=url; img.alt=""; img.classList.add("loaded");
     slot.appendChild(img);
     let n=0;
-    setInterval(async()=>{
+    setInterval(()=>{
       n++;
-      const newUrl=getPhoto(99+n*11, 1000, 750);
       img.style.opacity=0;
-      setTimeout(()=>{img.src=newUrl;img.style.opacity=1;},600);
+      setTimeout(()=>{
+        img.src=DOG_PHOTOS[(4+n*3)%DOG_PHOTOS.length];
+        img.style.opacity=1;
+      },600);
     }, 8000);
   }
 
-  // =================== LOCATION PHOTO ===================
-  async function setupLocationPhoto(){
+  // ====== LOCATION PHOTO ======
+  function setupLocationPhoto(){
     const slot=document.querySelector("[data-photo='location']");
     if(!slot) return;
-    const url=getPhoto(151, 1000, 1250);
+    const url=DOG_PHOTOS[27%DOG_PHOTOS.length];
     const img=document.createElement("img");
-    img.src=url; img.alt="";
-    img.classList.add("loaded");
+    img.src=url; img.alt=""; img.classList.add("loaded");
     slot.appendChild(img);
   }
 
-  // =================== FORM ===================
+  // ====== FORM ======
   function setupForm(){
     const form=document.getElementById("contactForm");
     if(!form) return;
@@ -362,7 +373,7 @@
     });
   }
 
-  // =================== HEADER / BURGER ===================
+  // ====== HEADER / BURGER ======
   function setupHeader(){
     const h=document.getElementById("site-header");
     if(!h) return;
@@ -376,16 +387,10 @@
     document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",()=>top.classList.remove("mobile-open")));
   }
 
-  // =================== COUNT-UP (count от финального числа в HTML) ===================
+  // ====== COUNT-UP ======
   function setupCountUp(){
     const els=document.querySelectorAll("[data-count]");
     if (!els.length) return;
-    // Сначала убедимся что HTML содержит финальное значение (на случай если в разметке был "0")
-    els.forEach(el=>{
-      const target=parseInt(el.dataset.count,10)||0;
-      el.textContent=target; // показываем сразу финальное
-    });
-    // Анимируем от 0 до target при появлении в viewport
     const animate=(el)=>{
       const target=parseInt(el.dataset.count,10)||0;
       if (target<=0) return;
@@ -414,15 +419,14 @@
     els.forEach(i=>io.observe(i));
   }
 
-  // =================== START ===================
-  document.addEventListener("DOMContentLoaded", async()=>{
+  // ====== START ======
+  document.addEventListener("DOMContentLoaded", ()=>{
     setupHeader();
     setupBurger();
     setupLightbox();
     setupCountUp();
     setupForm();
 
-    // Рендерим всё текстовое СРАЗУ (без фото)
     renderPartners();
     renderProcess();
     renderDayTimeline();
@@ -434,15 +438,12 @@
     renderServices();
     renderStories();
 
-    // Фото — параллельно
-    await Promise.all([
-      setupHeroCinema(),
-      setupServicePhotos(),
-      setupAboutPhoto(),
-      setupLocationPhoto(),
-      setupMarqueePhotos()
-    ]);
+    setupServicePhotos();
+    setupAboutPhoto();
+    setupLocationPhoto();
+    setupMarqueePhotos();
+    setupHeroCinema();
 
-    console.log("🐾 Paws Haven v7 loaded (all-visible edition).");
+    console.log("🐾 Paws Haven v9 loaded (real photos from thedogapi CDN, lazy-loaded).");
   });
 })();
