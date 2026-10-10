@@ -31,7 +31,7 @@ html{scroll-behavior:smooth}
 .mt-24{margin-top:24px}
 
 /* HEADER */
-.header{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px 0;transition:all .3s;background:transparent}
+.header{position:fixed;top:0;left:0;right:0;z-index:100;padding:12px 0;transition:all .3s;background:rgba(10,14,26,0.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.06)}
 .header.scrolled{background:rgba(10,14,26,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:10px 0;border-bottom:1px solid var(--border)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;gap:18px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);font-family:'Unbounded',sans-serif;font-weight:700;font-size:18px}
@@ -417,4 +417,33 @@ img.loaded{animation:none}
   .hero h1,.hero .display{font-size:28px!important;line-height:1.05!important}
   .display-md{font-size:22px!important}
   .container{padding:0 14px}
+}
+
+/* ===== V18 STICKY HEADER ON ALL DEVICES ===== */
+@media (max-width:820px){
+  .header{padding:10px 0;background:rgba(10,14,26,0.85)}
+  .header .logo{font-size:18px}
+  .header-inner{justify-content:space-between}
+  .nav{display:none}
+  .nav.open,.header.mobile-open .nav{display:flex}
+  .burger{display:block;background:transparent;border:0;padding:8px;cursor:pointer;width:40px;height:40px}
+  .burger span{display:block;width:24px;height:2px;background:var(--fg);margin:5px 0;transition:.3s}
+  .header.mobile-open .burger span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+  .header.mobile-open .burger span:nth-child(2){opacity:0}
+  .header.mobile-open .burger span:nth-child(3){transform:rotate(-45deg) translate(7px,-6px)}
+  .header.mobile-open{height:100vh;align-items:flex-start;padding-top:60px}
+  .header.mobile-open .nav{flex-direction:column;position:absolute;top:60px;left:0;right:0;background:rgba(10,14,26,0.98);padding:20px;gap:18px;border-bottom:1px solid var(--border)}
+  .header.mobile-open .nav a{font-size:18px;padding:8px 0}
+  /* Контент под header — отступ */
+  body{padding-top:60px!important}
+}
+@media (max-width:480px){
+  .header{padding:8px 0}
+  .header .logo{font-size:16px}
+}
+
+/* ===== V18: header always sticky — body offset только на мобиле ===== */
+@media (max-width:820px){
+  body{padding-top:60px}
+  .hero{padding-top:80px;min-height:calc(100vh - 60px)}
 }
