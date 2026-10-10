@@ -1,14 +1,13 @@
-/* PAWS HAVEN — script.js v9 (real photos from thedogapi CDN) */
+/* PAWS HAVEN — script.js v10 (LOCAL REAL PHOTOS, no CDN) */
 (function(){
   "use strict";
 
   function esc(s){return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]);}
   function pad(n){return String(n).padStart(3,"0");}
 
-  // ====== РЕАЛЬНЫЕ ФОТО СОБАК С CDN (50 уникальных URL) ======
-  const DOG_PHOTOS = ["https://cdn2.thedogapi.com/images/wRP-CQQJy.jpg", "https://cdn2.thedogapi.com/images/BkrJjgcV7_1280.jpg", "https://cdn2.thedogapi.com/images/J4H-oD_7x.jpg", "https://cdn2.thedogapi.com/images/pB43UCgl4.jpg", "https://cdn4.thedogapi.com/optimized/56j27IEHO8.jpg", "https://cdn2.thedogapi.com/images/YbXK-k96Y.jpg", "https://cdn2.thedogapi.com/images/By-GQTaNQ.gif", "https://cdn2.thedogapi.com/images/HyOjge5Vm_1280.jpg", "https://cdn4.thedogapi.com/optimized/AT2BZ19dCG.jpg", "https://cdn2.thedogapi.com/images/r12d7apV7.gif", "https://cdn4.thedogapi.com/optimized/ifO0hUoW3G.jpg", "https://cdn2.thedogapi.com/images/bEQBV6y9Q.jpg", "https://cdn4.thedogapi.com/optimized/c3a2TB0nzo.jpg", "https://cdn2.thedogapi.com/images/BkKZWlcVX_1280.jpg", "https://cdn2.thedogapi.com/images/Q72V090BS.jpg", "https://cdn4.thedogapi.com/optimized/w7RJ7eRzvW.jpg", "https://cdn2.thedogapi.com/images/Z8LiOtceX.jpg", "https://cdn4.thedogapi.com/optimized/OnOywWfsh1.jpg", "https://cdn2.thedogapi.com/images/BJ2Wq664X.gif", "https://cdn2.thedogapi.com/images/42QrDrylc.jpg", "https://cdn4.thedogapi.com/optimized/sKx0rFHMRN.jpg", "https://cdn4.thedogapi.com/optimized/ZZDmX3JmpP.jpg", "https://cdn4.thedogapi.com/optimized/kjHLge9m58.jpg", "https://cdn4.thedogapi.com/optimized/wnXnSQ9sTP.jpg", "https://cdn2.thedogapi.com/images/jJIqSF3mP.jpg", "https://cdn2.thedogapi.com/images/rk9k4aTNm.gif", "https://cdn2.thedogapi.com/images/DbcfkQrav.jpg", "https://cdn2.thedogapi.com/images/HJAFgxcNQ_1280.jpg", "https://cdn2.thedogapi.com/images/r1dgtOnBm_1280.jpg", "https://cdn2.thedogapi.com/images/S1T8Ee9Nm_1280.jpg", "https://cdn4.thedogapi.com/optimized/CQUHaShvmM.jpg", "https://cdn2.thedogapi.com/images/SyYtQe5V7_1280.jpg", "https://cdn2.thedogapi.com/images/UZtLVvNhE.jpg", "https://cdn4.thedogapi.com/optimized/61r5MvNDov.jpg", "https://cdn2.thedogapi.com/images/Hyv-ne94m_1280.jpg", "https://cdn2.thedogapi.com/images/12GTwG4Bj.jpg", "https://cdn4.thedogapi.com/optimized/5BVhG81gSe.jpg", "https://cdn4.thedogapi.com/optimized/R5fIKpkyhH.jpg", "https://cdn4.thedogapi.com/optimized/G7Ja3j7xAo.jpg", "https://cdn2.thedogapi.com/images/VSraIEQGd.jpg", "https://cdn4.thedogapi.com/optimized/HM6Q4EFzx5.jpg", "https://cdn2.thedogapi.com/images/ELeE5ayvN.jpg", "https://cdn2.thedogapi.com/images/Hk0Jfe5VQ_1280.jpg", "https://cdn4.thedogapi.com/optimized/JF4NsbSm9C.jpg", "https://cdn4.thedogapi.com/optimized/We2yW9Ke0s.jpg", "https://cdn2.thedogapi.com/images/SyRe4xcN7_1280.jpg", "https://cdn2.thedogapi.com/images/B1pDZx9Nm_1280.jpg", "https://cdn2.thedogapi.com/images/hOQCNqMDb.jpg", "https://cdn2.thedogapi.com/images/hYsMv3NQi.jpg", "https://cdn2.thedogapi.com/images/rkVlblcEQ_1280.jpg"];
+  // ====== ЛОКАЛЬНЫЕ ФОТО СОБАК (в assets/dogs/, загружены на GitHub Pages) ======
+  const DOG_PHOTOS = ["assets/dogs/01-golden.jpg", "assets/dogs/03-husky.jpg", "assets/dogs/07-beagle.jpg", "assets/dogs/12-border-collie.jpg", "assets/dogs/16-doberman.jpg", "assets/dogs/25-shih-tzu.jpg"];
 
-  // Мгновенно возвращает URL — без fetch, без async
   function getPhoto(seed, w, h){
     return DOG_PHOTOS[Math.abs(seed) % DOG_PHOTOS.length];
   }
@@ -20,15 +19,18 @@
     if (!frames.length) return;
     let cur = 0;
 
-    const urls = frames.length>0 ? [
-      DOG_PHOTOS[0], DOG_PHOTOS[7], DOG_PHOTOS[14], DOG_PHOTOS[21]
-    ] : [];
+    const urls = [
+      DOG_PHOTOS[0 % DOG_PHOTOS.length],
+      DOG_PHOTOS[1 % DOG_PHOTOS.length],
+      DOG_PHOTOS[2 % DOG_PHOTOS.length],
+      DOG_PHOTOS[3 % DOG_PHOTOS.length]
+    ];
 
     [...frames].forEach((f,i)=>{
       f.querySelector(".hero-loader")?.remove();
       const img=document.createElement("img");
-      img.src=urls[i]; img.alt="Собака"; img.loading="eager"; img.fetchpriority="high";
-      img.decoding="async";
+      img.src=urls[i]; img.alt="Собака"; img.loading="eager";
+      img.classList.add("loaded");
       f.appendChild(img);
       if (thumbs){
         const t=document.createElement("button");
@@ -38,21 +40,8 @@
         thumbs.appendChild(t);
       }
     });
-    // После загрузки — показать первый кадр
-    const allImgs = document.querySelectorAll(".hero-frame img");
-    let loaded = 0;
-    allImgs.forEach(im => {
-      im.addEventListener("load", () => {
-        im.classList.add("loaded");
-        loaded++;
-        if (loaded === 1) frames[0].classList.add("active");
-      });
-      im.addEventListener("error", () => { im.classList.add("loaded"); loaded++; if (loaded === 1) frames[0].classList.add("active"); });
-    });
-    // Failsafe — показать первый кадр через 0.5с на случай если onload не сработал
-    setTimeout(() => {
-      if (!frames[0].classList.contains("active")) frames[0].classList.add("active");
-    }, 500);
+    // Показываем первый кадр сразу
+    frames[0].classList.add("active");
 
     const tick=()=>{
       const next=(cur+1)%frames.length;
@@ -83,21 +72,6 @@
     hero.addEventListener("mouseleave",()=>{
       const active=hero.querySelector(".hero-frame.active img");
       if(active) active.style.transform="";
-    });
-  }
-
-  // ====== ЗАПОЛНЕНИЕ ФОТО (lazy-load, параллельно) ======
-  async function fillPhotos(selector, seedOffset){
-    const slots=document.querySelectorAll(selector);
-    if (!slots.length) return;
-    slots.forEach((s,i)=>{
-      const url=getPhoto(i+seedOffset);
-      const img=document.createElement("img");
-      img.src=url; img.alt=""; img.loading="lazy"; img.decoding="async";
-      img.classList.add("loaded");
-      s.appendChild(img);
-      const ph = s.querySelector(".placeholder, .story-img-shimmer, .lb-img-shimmer");
-      if (ph) ph.remove();
     });
   }
 
@@ -219,7 +193,7 @@
       return `
         <article class="story-card visible" data-i="${i}">
           <div class="story-img">
-            <img src="${url}" alt="${esc(s.name)}" loading="lazy" decoding="async" class="loaded">
+            <img src="${url}" alt="${esc(s.name)}" loading="lazy" class="loaded">
           </div>
           <div class="story-body">
             <h4>${esc(s.name)}</h4>
@@ -259,7 +233,7 @@
     const url=DOG_PHOTOS[(i*7+11)%DOG_PHOTOS.length];
     content.innerHTML=`
       <div class="lb-img">
-        <img src="${url}" alt="${esc(s.name)}" loading="lazy" decoding="async" class="loaded">
+        <img src="${url}" alt="${esc(s.name)}" loading="lazy" class="loaded">
       </div>
       <div class="lb-body">
         <h3>${esc(s.name)}</h3>
@@ -301,16 +275,13 @@
     const track1=document.getElementById("marqueePhotos");
     const track2=document.getElementById("marqueePhotos2");
     if(!track1||!track2) return;
-    const emojis=["🐕","🐶","🐾","🦴","🐩","🦮","🐕‍🦺","💛"];
-    // 14 разных фото
-    const selected = [...Array(14)].map((_,i) => DOG_PHOTOS[(i*3+2)%DOG_PHOTOS.length]);
+    const selected = [...Array(14)].map((_,i) => DOG_PHOTOS[(i*2+1)%DOG_PHOTOS.length]);
     const build=(host)=>{
       const track=document.createElement("div");
       track.className="marquee-track-photos";
-      track.innerHTML = selected.concat(selected).map((u,i)=>{
-        const e = emojis[i%emojis.length];
+      track.innerHTML = selected.concat(selected).map((u)=>{
         return `<div class="marquee-photo">
-          <img src="${u}" alt="" loading="lazy" decoding="async" class="loaded">
+          <img src="${u}" alt="" loading="lazy" class="loaded">
         </div>`;
       }).join("");
       host.appendChild(track);
@@ -325,7 +296,7 @@
     slots.forEach((s,i)=>{
       const url=DOG_PHOTOS[(i*5+8)%DOG_PHOTOS.length];
       const img=document.createElement("img");
-      img.src=url; img.alt=""; img.loading="lazy"; img.decoding="async";
+      img.src=url; img.alt=""; img.loading="lazy";
       img.classList.add("loaded");
       s.appendChild(img);
       s.querySelector(".placeholder")?.remove();
@@ -355,7 +326,7 @@
   function setupLocationPhoto(){
     const slot=document.querySelector("[data-photo='location']");
     if(!slot) return;
-    const url=DOG_PHOTOS[27%DOG_PHOTOS.length];
+    const url=DOG_PHOTOS[Math.min(27, DOG_PHOTOS.length-1)];
     const img=document.createElement("img");
     img.src=url; img.alt=""; img.classList.add("loaded");
     slot.appendChild(img);
@@ -444,6 +415,6 @@
     setupMarqueePhotos();
     setupHeroCinema();
 
-    console.log("🐾 Paws Haven v9 loaded (real photos from thedogapi CDN, lazy-loaded).");
+    console.log("🐾 Paws Haven v10 loaded (LOCAL real photos, no CDN).");
   });
 })();
