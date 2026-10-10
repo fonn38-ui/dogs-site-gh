@@ -6,7 +6,7 @@
   function pad(n){return String(n).padStart(3,"0");}
 
   // ====== ЛОКАЛЬНЫЕ ФОТО СОБАК (в assets/dogs/, загружены на GitHub Pages) ======
-  const DOG_PHOTOS = ["assets/dogs/01-golden.jpg", "assets/dogs/03-husky.jpg", "assets/dogs/07-beagle.jpg", "assets/dogs/12-border-collie.jpg", "assets/dogs/16-doberman.jpg", "assets/dogs/25-shih-tzu.jpg"];
+  const DOG_PHOTOS = ["assets/dogs/01-golden.jpg", "assets/dogs/03-husky.jpg", "assets/dogs/07-beagle.jpg", "assets/dogs/09-dachshund.jpg", "assets/dogs/12-border-collie.jpg", "assets/dogs/16-doberman.jpg", "assets/dogs/17-saint-bernard.jpg", "assets/dogs/22-jack-russell.jpg", "assets/dogs/25-shih-tzu.jpg", "assets/dogs/29-samoyed.jpg"];
 
   function getPhoto(seed, w, h){
     return DOG_PHOTOS[Math.abs(seed) % DOG_PHOTOS.length];
