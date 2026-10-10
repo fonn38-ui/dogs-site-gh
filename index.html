@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paws Haven — передержка собак в Москве</title>
+<meta name="description" content="Paws Haven — частный дом для передержки собак в Москве и Подмосковье. Дневная и длительная передержка, медицинский уход.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="header" id="site-header">
+  <div class="container header-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark">🐾</span>
+      <span class="logo-text">Paws Haven</span>
+    </a>
+    <nav class="nav">
+      <a href="#services">Форматы</a>
+      <a href="#about">О нас</a>
+      <a href="#process">Как это работает</a>
+      <a href="#story">Истории</a>
+      <a href="#team">Команда</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <a href="#contact" class="btn btn-primary btn-cta-header">Записаться</a>
+    <button class="burger" aria-label="Меню">≡</button>
+  </div>
+</header>
+
+<!-- ====== HERO ====== -->
+<section class="hero" id="top">
+  <div class="hero-cinema" id="heroCinema">
+    <div class="hero-frame active" data-frame="0"><div class="hero-loader">Загружаем счастливых собак…</div></div>
+    <div class="hero-frame" data-frame="1"></div>
+    <div class="hero-frame" data-frame="2"></div>
+    <div class="hero-frame" data-frame="3"></div>
+    <div class="hero-frame" data-frame="4"></div>
+    <div class="hero-frame" data-frame="5"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-cinema-status"><span class="dot"></span><span>Live · кадры обновляются</span></div>
+
+  <div class="container hero-content">
+    <span class="kicker">Тёплый дом для собак с 2018 года</span>
+    <h1 class="display">
+      <span>Временный дом</span><br>
+      <span class="grad">где о вашем друге</span><br>
+      <span>позаботятся как о своём</span>
+    </h1>
+    <p class="lead">Дневная и длительная передержка, медицинский уход, выезд за собакой. Работаем в Москве и Подмосковье с 2018 года.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary">Записаться</a>
+      <a href="#story" class="btn btn-ghost">Истории собак</a>
+    </div>
+    <div class="hero-thumbs" id="heroThumbs"></div>
+  </div>
+</section>
+
+<!-- ====== 3 ФОРМАТА ====== -->
+<section class="section" id="services">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Что мы делаем</span>
+      <h2 class="display-md">Три формата,<br><span class="grad">один подход</span></h2>
+      <p class="muted center">Какой бы ни была ситуация — мы подберём вариант, в котором и вам, и вашей собаке будет спокойно.</p>
+    </header>
+
+    <div class="features-grid">
+      <article class="feature-card reveal" data-slug="daily">
+        <div class="feature-photo" data-photo="card-daily"></div>
+        <div class="feature-icon">☀️</div>
+        <h3>Дневная передержка</h3>
+        <p>С утра до вечера: прогулка 3 раза, кормление, игры, дневной отдых. Забираете после работы — собака уставшая и счастливая.</p>
+        <ul class="feature-list">
+          <li>3 прогулки в день</li>
+          <li>Двухразовое кормление</li>
+          <li>Фото-отчёт в Telegram</li>
+          <li>График с 7:30 до 21:00</li>
+        </ul>
+        <div class="feature-price"><strong>от 1 500 ₽</strong><span>/ сутки</span></div>
+        <a href="#contact" class="feature-link">Записаться →</a>
+      </article>
+      <article class="feature-card reveal" data-slug="long">
+        <div class="feature-photo" data-photo="card-long"></div>
+        <div class="feature-icon">🌙</div>
+        <h3>Длительная передержка</h3>
+        <p>От 1 дня до нескольких месяцев. Собака живёт в нашем доме как своя: своя комната, свой режим, те же игрушки что и дома.</p>
+        <ul class="feature-list">
+          <li>Своя комната с лежанкой</li>
+          <li>Свободный выход во двор</li>
+          <li>Игры с другими собаками</li>
+          <li>Без клеток и вольеров 24/7</li>
+        </ul>
+        <div class="feature-price"><strong>от 1 200 ₽</strong><span>/ сутки</span></div>
+        <a href="#contact" class="feature-link">Записаться →</a>
+      </article>
+      <article class="feature-card reveal" data-slug="medical">
+        <div class="feature-photo" data-photo="card-medical"></div>
+        <div class="feature-icon">🩺</div>
+        <h3>Медицинский уход</h3>
+        <p>Приём после операций, во время болезни, при хронических состояниях. Круглосуточный присмотр, связь с вашим ветеринаром.</p>
+        <ul class="feature-list">
+          <li>Штатный ветеринар</li>
+          <li>Приём лекарств по графику</li>
+          <li>Уколы и процедуры</li>
+          <li>Контакт с вашим врачом</li>
+        </ul>
+        <div class="feature-price"><strong>от 2 000 ₽</strong><span>/ сутки</span></div>
+        <a href="#contact" class="feature-link">Записаться →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ====== О НАС ====== -->
+<section class="section section-alt" id="about">
+  <div class="container about-grid">
+    <div class="about-left">
+      <span class="kicker">О нас</span>
+      <h2 class="display-md">Приёмная семья,<br><span class="grad-grad2">а не гостиница</span></h2>
+      <p class="about-quote">«<em>Мы знаем, каково это — отдавать любимую собаку в чужие руки. Поэтому в нашем доме всё устроено так, чтобы хозяин не переживал ни секунды.</em>»</p>
+      <p class="about-author"><strong>Анна Кравченко</strong>, основатель</p>
+      <p class="muted">Paws Haven — это не гостиница для собак. Это приёмная семья: частный дом с огороженной территорией, постоянные волонтёры и штатный ветеринар. За пять лет мы приняли 350+ собак — от щенков до пожилых, от беспородных до чемпионов выставок.</p>
+      <a href="#team" class="btn btn-primary mt-24">Познакомиться с командой</a>
+    </div>
+    <div class="about-right">
+      <div class="metrics-stack">
+        <div class="metric-card reveal"><strong data-count="350">0</strong><span>Собак принято</span></div>
+        <div class="metric-card reveal"><strong data-count="12">0</strong><span>Постоянных волонтёров</span></div>
+        <div class="metric-card reveal"><strong data-count="24">0</strong><span>/7 на связи с хозяином</span></div>
+        <div class="metric-card reveal"><strong data-count="97">0</strong><span>% возвращённых домой</span></div>
+      </div>
+      <div class="about-side-photo" data-photo="about-side"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== КАК ЭТО РАБОТАЕТ — 4 ШАГА ====== -->
+<section class="section" id="process">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Процесс</span>
+      <h2 class="display-md">От заявки до<br><span class="grad">возвращения домой</span></h2>
+      <p class="muted center">Четыре шага. Никаких сложных договоров, скрытых платежей и сюрпризов.</p>
+    </header>
+    <div class="process-grid" id="processGrid"></div>
+  </div>
+</section>
+
+<!-- ====== ЧТО ВХОДИТ ====== -->
+<section class="section section-alt" id="rates">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Что входит в любую передержку</span>
+      <h2 class="display-md">Забота,<br><span class="grad">видная в мелочах</span></h2>
+    </header>
+    <div class="services-grid" id="servicesGrid"></div>
+    <div class="services-cta">
+      <p class="muted">Не знаете, какой формат нужен? Подскажем по телефону — без обязательств.</p>
+      <a href="#contact" class="btn btn-primary">Получить консультацию</a>
+    </div>
+  </div>
+</section>
+
+<!-- ====== РАСПОРЯДОК ДНЯ ====== -->
+<section class="section" id="day">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Обычный день</span>
+      <h2 class="display-md">Как проходит<br><span class="grad">день в Paws Haven</span></h2>
+      <p class="muted center">Расписание составлено так, чтобы собаке было сбалансированно: движение, отдых и общение — поровну.</p>
+    </header>
+    <div class="day-timeline" id="dayTimeline"></div>
+  </div>
+</section>
+
+<!-- ====== ЧЕГО МЫ НЕ ДЕЛАЕМ ====== -->
+<section class="section section-alt" id="nogo">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Честно</span>
+      <h2 class="display-md">Чего мы <span class="grad-grad2">не делаем</span></h2>
+      <p class="muted center">Снимаем опасения до того, как они появятся.</p>
+    </header>
+    <div class="nogo-grid" id="nogoGrid"></div>
+  </div>
+</section>
+
+<!-- ====== ИСТОРИИ ====== -->
+<section class="section" id="story">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Истории</span>
+      <h2 class="display-md">Шесть историй,<br><span class="grad-grad2">которые мы помним</span></h2>
+      <p class="muted center">Каждая собака, которую мы принимали, оставила след. Кликните на портрет — откроется вся история.</p>
+    </header>
+    <div class="stories-grid" id="storiesGrid"></div>
+    <div class="stories-nav">
+      <button class="stories-prev" id="storiesPrev" aria-label="Назад">‹</button>
+      <span class="stories-count" id="storiesCount">01 / 06</span>
+      <button class="stories-next" id="storiesNext" aria-label="Вперёд">›</button>
+    </div>
+    <div class="stories-tag-cloud">
+      <span class="tag">Видео каждый день</span>
+      <span class="tag">Личная комната</span>
+      <span class="tag">Без клеток</span>
+      <span class="tag">Опытные волонтёры</span>
+      <span class="tag">Бесплатный первый визит</span>
+    </div>
+  </div>
+</section>
+
+<!-- ЛАЙТБОКС -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lightboxClose">×</button>
+    <button class="lightbox-prev" id="lightboxPrev">‹</button>
+    <button class="lightbox-next" id="lightboxNext">›</button>
+    <div class="lightbox-content" id="lightboxContent"></div>
+  </div>
+</div>
+
+<!-- ====== ОТЗЫВЫ ====== -->
+<section class="section section-alt" id="reviews">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Отзывы хозяев</span>
+      <h2 class="display-md">Что говорят<br><span class="grad">те, кто возвращался</span></h2>
+    </header>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div>
+</section>
+
+<!-- ====== КОМАНДА ====== -->
+<section class="section" id="team">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Команда</span>
+      <h2 class="display-md">Те, кто будет<br><span class="grad-grad2">заботиться</span></h2>
+      <p class="muted center">Шесть постоянных людей, которые живут и работают с собаками круглый год.</p>
+    </header>
+    <div class="team-grid" id="teamGrid"></div>
+  </div>
+</section>
+
+<!-- ====== ЛОКАЦИЯ ====== -->
+<section class="section section-alt" id="location">
+  <div class="container location-grid">
+    <div class="location-info">
+      <span class="kicker">Локация</span>
+      <h2 class="display-md">Где мы<br><span class="grad">находимся</span></h2>
+      <p class="location-item"><strong>📍 Адрес</strong><br><span id="loc-address"></span></p>
+      <p class="location-item"><strong>🛣️ Как добраться</strong><br><span id="loc-nearest"></span></p>
+      <p class="location-item"><strong>🚇 Метро</strong><br><span id="loc-metro"></span></p>
+      <p class="location-item"><strong>🅿️ Парковка</strong><br><span id="loc-parking"></span></p>
+      <p class="location-item"><strong>🐾 Территория</strong></p>
+      <ul class="location-features" id="loc-features"></ul>
+      <a href="https://yandex.ru/maps/?text=СНТ%20Заря" target="_blank" rel="noopener" class="btn btn-primary mt-24">Открыть на карте</a>
+    </div>
+    <div class="location-photo" data-photo="location"></div>
+  </div>
+</section>
+
+<!-- ====== ФОТО-ЛЕНТА ====== -->
+<section class="section" id="gallery">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Фотогалерея</span>
+      <h2 class="display-md">Кадры из нашего<br><span class="grad">дома</span></h2>
+    </header>
+  </div>
+  <div class="marquee-photos" id="marqueePhotos"></div>
+  <div class="marquee-photos reverse" id="marqueePhotos2"></div>
+</section>
+
+<!-- ====== ПАРТНЁРЫ ====== -->
+<section class="section" id="partners">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Партнёры</span>
+      <h2 class="display-md">Нам доверяют<br><span class="grad">ведущие ветклиники</span></h2>
+    </header>
+    <div class="partners-grid" id="partnersGrid"></div>
+  </div>
+</section>
+
+<!-- ====== FAQ ====== -->
+<section class="section section-alt" id="faq">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">FAQ</span>
+      <h2 class="display-md">Частые<br><span class="grad-grad2">вопросы</span></h2>
+    </header>
+    <div class="faq-list" id="faqList"></div>
+  </div>
+</section>
+
+<!-- ====== КОНТАКТЫ ====== -->
+<section class="section" id="contact">
+  <div class="container">
+    <header class="section-head centered">
+      <span class="kicker">Записаться</span>
+      <h2 class="display-md">Расскажите о вашей<br><span class="grad-grad2">собаке</span></h2>
+      <p class="muted center">Ответим в течение часа. Согласуем время заезда и формат.</p>
+    </header>
+
+    <div class="contact-grid">
+      <form class="contact-form" id="contactForm">
+        <div class="row">
+          <label>Ваше имя<input type="text" name="name" required placeholder="Анна"></label>
+          <label>Телефон<input type="tel" name="phone" required placeholder="+7 999 123-45-67"></label>
+        </div>
+        <label>Кличка и порода собаки<input type="text" name="dog" placeholder="Барон, кокер-спаниель"></label>
+        <label>Формат передержки
+          <select name="format">
+            <option value="daily">Дневная передержка (от 1500 ₽/сут)</option>
+            <option value="long">Длительная передержка (от 1200 ₽/сут)</option>
+            <option value="medical">Медицинский уход (от 2000 ₽/сут)</option>
+          </select>
+        </label>
+        <label>Когда нужен заезд<input type="date" name="date"></label>
+        <label>Комментарий<textarea name="note" rows="3" placeholder="Особенности здоровья, привычки, что взять с собой..."></textarea></label>
+        <button type="submit" class="btn btn-primary">Отправить заявку</button>
+        <p class="form-policy">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+      </form>
+
+      <aside class="contact-aside">
+        <h3>Контакты</h3>
+        <p><strong>Телефон</strong><br><a href="tel:+79991234567">+7 (999) 123-45-67</a></p>
+        <p><strong>Telegram</strong><br><a href="https://t.me/pawshaven">@pawshaven</a></p>
+        <p><strong>WhatsApp</strong><br><a href="https://wa.me/79991234567">+7 (999) 123-45-67</a></p>
+        <p><strong>Email</strong><br><a href="mailto:hi@paws-haven.example">hi@paws-haven.example</a></p>
+        <p><strong>Адрес</strong><br>Московская область, СНТ «Заря», участок 14</p>
+        <p><strong>Часы работы</strong><br>Круглосуточно, без выходных</p>
+        <div class="hero-stats-mini">
+          <div><strong>5</strong><span>лет работы</span></div>
+          <div><strong>350</strong><span>собак принято</span></div>
+          <div><strong>4.9</strong><span>★ на Яндекс Картах</span></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="logo-mark">🐾</span>
+      <span class="logo-text">Paws Haven</span>
+      <p>Передержка собак в Москве и Подмосковье. Приёмная семья с 2018 года.</p>
+      <p class="footer-meta">ИНН 7728123456 · ОГРН 1187746000000</p>
+    </div>
+    <div class="footer-links">
+      <div>
+        <h4>Сервис</h4>
+        <a href="#services">Дневная передержка</a>
+        <a href="#services">Длительная передержка</a>
+        <a href="#services">Медицинский уход</a>
+        <a href="#contact">Записаться</a>
+      </div>
+      <div>
+        <h4>О нас</h4>
+        <a href="#about">История</a>
+        <a href="#team">Команда</a>
+        <a href="#story">Истории собак</a>
+        <a href="#location">Как добраться</a>
+      </div>
+      <div>
+        <h4>Связь</h4>
+        <a href="tel:+79991234567">+7 (999) 123-45-67</a>
+        <a href="https://t.me/pawshaven">@pawshaven</a>
+        <a href="mailto:hi@paws-haven.example">hi@paws-haven.example</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <span>© 2018–2026 Paws Haven · Все собаки возвращены домой · Сделано с ❤</span>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
