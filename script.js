@@ -295,11 +295,14 @@
     if (!slots.length) return;
     slots.forEach((s,i)=>{
       const url=DOG_PHOTOS[(i*5+8)%DOG_PHOTOS.length];
+      // Создадим img в HTML сразу с src + onload
       const img=document.createElement("img");
       img.src=url; img.alt="Собака";
+      img.loading="eager"; img.decoding="sync";
+      img.style.cssText="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;z-index:1";
       img.classList.add("loaded");
-      img.style.cssText="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0";
-      // Дождёмся загрузки — потом убираем placeholder
+      s.style.position="relative";
+      s.style.overflow="hidden";
       img.onload=()=>{ s.classList.add("loaded"); s.querySelector(".placeholder")?.remove(); };
       img.onerror=()=>{ s.querySelector(".placeholder")?.remove(); };
       s.appendChild(img);
