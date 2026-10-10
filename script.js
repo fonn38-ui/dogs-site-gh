@@ -5,55 +5,14 @@
   function esc(s){return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]);}
   function pad(n){return String(n).padStart(3,"0");}
 
-  // =================== СЕРВИС ФОТО (быстрый + 2-стоп fallback) ===================
-  // Picsum: 99% uptime, быстрый, не блокирует
-  // placedog: медленный но собачий
-  // Локалка: гарантия
-  // Таймаут короткий — 1.8s, потом fallback
-  const LOCAL = [
-    "assets/breeds/husky_1.jpg","assets/breeds/corgi_1.jpg","assets/breeds/collie_2.jpg",
-    "assets/breeds/collie_3.jpg","assets/breeds/retriever_2.jpg",
-    "assets/gallery/jackrussell.jpg","assets/gallery/cavalier.jpg"
-  ];
-  const DOGS = [
-    "https://placedog.net/640/480?id=82","https://placedog.net/640/480?id=137","https://placedog.net/640/480?id=108",
-    "https://placedog.net/640/480?id=55","https://placedog.net/640/480?id=171","https://placedog.net/640/480?id=29",
-    "https://placedog.net/640/480?id=66","https://placedog.net/640/480?id=144"
-  ];
+  // =================== СЕРВИС ФОТО (ТОЛЬКО ЛОКАЛЬНЫЕ SVG) ===================
+  // 30 SVG-фото в /assets/dogs/ — 4 KB каждое, мгновенная загрузка, ноль сети
+  const DOG_PHOTOS = [];
+  for (let i = 1; i <= 30; i++) DOG_PHOTOS.push(`assets/dogs/dog_${String(i).padStart(2,"0")}.svg`);
 
-  function tryImg(url, timeout){
-    return new Promise(res=>{
-      const img=new Image();
-      let done=false;
-      const ok=()=>{if(!done&&img.naturalWidth>40){done=true;res(img.src);}};
-      const fail=()=>{if(!done){done=true;res(null);}};
-      img.onload=ok; img.onerror=fail;
-      img.src=url;
-      setTimeout(fail,timeout);
-    });
-  }
-
-  // ПАРАЛЛЕЛЬНАЯ загрузка всех попыток, возвращаем первый успешный
-  function raceImg(urls, timeout){
-    return new Promise(res=>{
-      let answered=false;
-      const finalize=(v)=>{if(!answered){answered=true;res(v);}};
-      const try1=(u)=>tryImg(u, timeout).then(v=>v&&finalize(v));
-      urls.forEach(try1);
-      // Гарантированный fallback по таймауту
-      setTimeout(()=>finalize(null), timeout+200);
-    });
-  }
-
-  async function getPhoto(seed, w, h){
-    const idx=Math.abs(seed*7+3)%DOGS.length;
-    const placedogUrl = `${DOGS[idx]}&t=${seed}`; // ignored by server
-    const picsumUrl   = `https://picsum.photos/seed/dog${seed}/${w}/${h}`;
-    const localUrl    = LOCAL[seed%LOCAL.length];
-    // Picsum обычно быстрее — пробуем его первым
-    const got = await raceImg([picsumUrl, placedogUrl, localUrl], 2200);
-    if (got) return got;
-    return localUrl; // Гарантированный последний резерв
+  // Мгновенно возвращает URL — без fetch, без async
+  function getPhoto(seed, w, h){
+    return DOG_PHOTOS[Math.abs(seed) % DOG_PHOTOS.length];
   }
 
   // =================== HERO КИНО ===================
@@ -121,7 +80,7 @@
     if (!slots.length) return;
     // Параллельно
     await Promise.all([...slots].map(async(s,i)=>{
-      const url=await getPhoto(i+seedOffset, w, h);
+      const url=getPhoto(i+seedOffset, w, h);
       const img=document.createElement("img");
       img.src=url; img.alt=""; img.loading="lazy";
       img.classList.add("loaded");
@@ -353,7 +312,7 @@
     const slots=document.querySelectorAll("[data-service-photo]");
     if (!slots.length) return;
     await Promise.all([...slots].map(async(s,i)=>{
-      const url=await getPhoto(i*13+5, 600, 360);
+      const url=getPhoto(i*13+5, 600, 360);
       const img=document.createElement("img");
       img.src=url; img.alt=""; img.loading="lazy";
       img.classList.add("loaded");
@@ -366,7 +325,7 @@
   async function setupAboutPhoto(){
     const slot=document.querySelector("[data-photo='about-side']");
     if(!slot) return;
-    const url=await getPhoto(99, 1000, 750);
+    const url=getPhoto(99, 1000, 750);
     const img=document.createElement("img");
     img.src=url; img.alt="";
     img.classList.add("loaded");
@@ -374,7 +333,7 @@
     let n=0;
     setInterval(async()=>{
       n++;
-      const newUrl=await getPhoto(99+n*11, 1000, 750);
+      const newUrl=getPhoto(99+n*11, 1000, 750);
       img.style.opacity=0;
       setTimeout(()=>{img.src=newUrl;img.style.opacity=1;},600);
     }, 8000);
@@ -384,7 +343,7 @@
   async function setupLocationPhoto(){
     const slot=document.querySelector("[data-photo='location']");
     if(!slot) return;
-    const url=await getPhoto(151, 1000, 1250);
+    const url=getPhoto(151, 1000, 1250);
     const img=document.createElement("img");
     img.src=url; img.alt="";
     img.classList.add("loaded");
