@@ -289,22 +289,25 @@
     build(track1); build(track2);
   }
 
-  // ====== SERVICES PHOTO ======
+  // ====== SERVICES PHOTO (для [data-photo^="card-"]) ======
   function setupServicePhotos(){
-    const slots=document.querySelectorAll("[data-service-photo]");
+    const slots=document.querySelectorAll("[data-photo^='card-']");
     if (!slots.length) return;
     slots.forEach((s,i)=>{
       const url=DOG_PHOTOS[(i*5+8)%DOG_PHOTOS.length];
-      // Создадим img в HTML сразу с src + onload
       const img=document.createElement("img");
       img.src=url; img.alt="Собака";
       img.loading="eager"; img.decoding="sync";
-      img.style.cssText="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;z-index:1";
+      img.style.cssText="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0";
       img.classList.add("loaded");
+      // Стили для контейнера
       s.style.position="relative";
       s.style.overflow="hidden";
-      img.onload=()=>{ s.classList.add("loaded"); s.querySelector(".placeholder")?.remove(); };
-      img.onerror=()=>{ s.querySelector(".placeholder")?.remove(); };
+      s.style.minHeight="280px";
+      // Background пока грузится
+      s.style.background = `linear-gradient(135deg, hsl(${(i*60)%360},40%,25%), #0F1424)`;
+      img.onload=()=>{ img.classList.add("loaded"); };
+      img.onerror=()=>{};
       s.appendChild(img);
     });
   }
