@@ -192,8 +192,8 @@
       const url=DOG_PHOTOS[(i*3+5)%DOG_PHOTOS.length];
       return `
         <article class="story-card visible" data-i="${i}">
-          <div class="story-img">
-            <img src="${url}" alt="${esc(s.name)}" loading="lazy" class="loaded">
+          <div class="story-img" style="position:relative;overflow:hidden">
+            <img src="${url}" alt="${esc(s.name)}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block" class="loaded">
           </div>
           <div class="story-body">
             <h4>${esc(s.name)}</h4>
@@ -296,10 +296,13 @@
     slots.forEach((s,i)=>{
       const url=DOG_PHOTOS[(i*5+8)%DOG_PHOTOS.length];
       const img=document.createElement("img");
-      img.src=url; img.alt=""; img.loading="lazy";
+      img.src=url; img.alt="Собака";
       img.classList.add("loaded");
+      img.style.cssText="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0";
+      // Дождёмся загрузки — потом убираем placeholder
+      img.onload=()=>{ s.classList.add("loaded"); s.querySelector(".placeholder")?.remove(); };
+      img.onerror=()=>{ s.querySelector(".placeholder")?.remove(); };
       s.appendChild(img);
-      s.querySelector(".placeholder")?.remove();
     });
   }
 
@@ -309,7 +312,9 @@
     if(!slot) return;
     const url=DOG_PHOTOS[4%DOG_PHOTOS.length];
     const img=document.createElement("img");
-    img.src=url; img.alt=""; img.classList.add("loaded");
+    img.src=url; img.alt="";
+    img.style.cssText="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .6s";
+    img.classList.add("loaded");
     slot.appendChild(img);
     let n=0;
     setInterval(()=>{
@@ -328,7 +333,9 @@
     if(!slot) return;
     const url=DOG_PHOTOS[Math.min(27, DOG_PHOTOS.length-1)];
     const img=document.createElement("img");
-    img.src=url; img.alt=""; img.classList.add("loaded");
+    img.src=url; img.alt="";
+    img.style.cssText="position:absolute;inset:0;width:100%;height:100%;object-fit:cover";
+    img.classList.add("loaded");
     slot.appendChild(img);
   }
 
