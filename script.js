@@ -44,13 +44,16 @@
         thumbs.appendChild(t);
       }
     });
-    // Показываем первый кадр сразу
-    frames[0].classList.add("active");
+    // Все кадры видны, активный — поверх остальных (z-index 10)
+    frames.forEach((f,i)=>{ f.classList.add("active"); if (i>0) f.style.opacity="0.6"; });
+    frames[0].style.zIndex="10";
 
+    // Показываем ВСЕ кадры (opacity 1) — меняем только z-index активного
+    frames.forEach(f=>f.classList.add("active"));
     const tick=()=>{
       const next=(cur+1)%frames.length;
-      frames[cur].classList.remove("active");
-      frames[next].classList.add("active");
+      frames[cur].style.zIndex="";
+      frames[next].style.zIndex="10";
       thumbs?.querySelectorAll(".hero-thumb").forEach((t,j)=>t.classList.toggle("active", j===next));
       cur=next;
     };
