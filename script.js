@@ -6,7 +6,7 @@
   function pad(n){return String(n).padStart(3,"0");}
 
   // ====== ЛОКАЛЬНЫЕ ФОТО СОБАК (в assets/dogs/, загружены на GitHub Pages) ======
-  const DOG_PHOTOS = ["assets/dogs/01-golden.jpg", "assets/dogs/03-husky.jpg", "assets/dogs/07-beagle.jpg", "assets/dogs/09-dachshund.jpg", "assets/dogs/12-border-collie.jpg", "assets/dogs/16-doberman.jpg", "assets/dogs/17-saint-bernard.jpg", "assets/dogs/22-jack-russell.jpg", "assets/dogs/25-shih-tzu.jpg", "assets/dogs/29-samoyed.jpg"];
+  const DOG_PHOTOS = ["assets/dogs/01-retriever-golden.jpg", "assets/dogs/02-corgi-cardigan.jpg", "assets/dogs/03-corgi.jpg", "assets/dogs/04-husky.jpg", "assets/dogs/05-german-shepherd.jpg", "assets/dogs/06-poodle-standard.jpg", "assets/dogs/07-beagle.jpg", "assets/dogs/08-bulldog-english.jpg", "assets/dogs/09-dachshund.jpg", "assets/dogs/10-chihuahua.jpg", "assets/dogs/11-pomeranian.jpg", "assets/dogs/12-collie-border.jpg", "assets/dogs/13-rottweiler.jpg", "assets/dogs/14-terrier-yorkshire.jpg", "assets/dogs/15-doberman.jpg", "assets/dogs/16-dalmatian.jpg", "assets/dogs/17-boxer.jpg", "assets/dogs/18-australian-shepherd.jpg", "assets/dogs/19-bulldog-french.jpg", "assets/dogs/20-dane-great.jpg", "assets/dogs/21-shihtzu.jpg", "assets/dogs/22-maltese.jpg", "assets/dogs/23-vizsla.jpg", "assets/dogs/24-weimaraner.jpg", "assets/dogs/25-samoyed.jpg"];
 
   function getPhoto(seed, w, h){
     return DOG_PHOTOS[Math.abs(seed) % DOG_PHOTOS.length];
