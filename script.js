@@ -13,73 +13,38 @@
   }
 
   // ====== HERO КИНО ======
-  async function setupHeroCinema(){
-    const frames = document.querySelectorAll(".hero-frame");
-    const thumbs = document.getElementById("heroThumbs");
-    if (!frames.length) return;
-    let cur = 0;
-
-    const urls = [
-      DOG_PHOTOS[0 % DOG_PHOTOS.length],
-      DOG_PHOTOS[1 % DOG_PHOTOS.length],
-      DOG_PHOTOS[2 % DOG_PHOTOS.length],
-      DOG_PHOTOS[3 % DOG_PHOTOS.length]
-    ];
-
-    [...frames].forEach((f,i)=>{
-      f.querySelector(".hero-loader")?.remove();
-      // Сразу ставим background-image — будет видно до загрузки img
-      f.style.backgroundImage = `url(${urls[i]})`;
-      f.style.backgroundSize = "cover";
-      f.style.backgroundPosition = "center";
-      const img=document.createElement("img");
-      img.src=urls[i]; img.alt=""; img.loading="eager"; img.decoding="async";
-      img.style.cssText="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;transition:transform .8s ease";
-      f.appendChild(img);
-      if (thumbs){
-        const t=document.createElement("button");
-        t.className="hero-thumb"+(i===0?" active":"");
-        t.style.backgroundImage=`url(${urls[i]})`;
-        t.dataset.i=i;
-        thumbs.appendChild(t);
+  async function setupHeroVideo(){
+    const video = document.getElementById("heroVideo");
+    const fallback = document.querySelector(".hero-video-fallback");
+    if(!video) return;
+    
+    // Когда видео готово — показываем и скрываем постер
+    function showVideo(){
+      video.classList.add("loaded");
+      if(fallback) fallback.classList.add("hidden");
+    }
+    
+    // Слушаем события
+    if(video.readyState >= 2){
+      // Уже загружено
+      showVideo();
+    }
+    video.addEventListener("canplay", showVideo, {once:true});
+    video.addEventListener("loadeddata", showVideo, {once:true});
+    
+    // Если видео не загружается (мобильный медленный интернет),
+    // через 3 секунды показываем постер
+    setTimeout(function(){
+      if(!video.classList.contains("loaded")){
+        if(fallback) fallback.classList.remove("hidden");
       }
-    });
-    // Все кадры видны, активный — поверх остальных (z-index 10)
-    frames.forEach((f,i)=>{ f.classList.add("active"); if (i>0) f.style.opacity="0.6"; });
-    frames[0].style.zIndex="10";
-
-    // Показываем ВСЕ кадры (opacity 1) — меняем только z-index активного
-    frames.forEach(f=>f.classList.add("active"));
-    const tick=()=>{
-      const next=(cur+1)%frames.length;
-      frames[cur].style.zIndex="";
-      frames[next].style.zIndex="10";
-      thumbs?.querySelectorAll(".hero-thumb").forEach((t,j)=>t.classList.toggle("active", j===next));
-      cur=next;
-    };
-    let timer=setInterval(tick,3800);
-    const hero=document.querySelector(".hero");
-    hero.addEventListener("mouseenter",()=>clearInterval(timer));
-    hero.addEventListener("mouseleave",()=>{timer=setInterval(tick,3800)});
-    thumbs?.addEventListener("click",e=>{
-      const t=e.target.closest(".hero-thumb"); if(!t) return;
-      const i=parseInt(t.dataset.i,10);
-      frames[cur].classList.remove("active");
-      frames[i].classList.add("active");
-      thumbs.querySelectorAll(".hero-thumb").forEach((t2,j)=>t2.classList.toggle("active", j===i));
-      cur=i;
-    });
-    hero.addEventListener("mousemove",e=>{
-      const r=hero.getBoundingClientRect();
-      const x=(e.clientX-r.left)/r.width-0.5;
-      const y=(e.clientY-r.top)/r.height-0.5;
-      const active=hero.querySelector(".hero-frame.active img");
-      if(active) active.style.transform=`translate(${x*-20}px, ${y*-20}px) scale(1.16)`;
-    });
-    hero.addEventListener("mouseleave",()=>{
-      const active=hero.querySelector(".hero-frame.active img");
-      if(active) active.style.transform="";
-    });
+    }, 3000);
+    
+    // Уважаем prefers-reduced-motion
+    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+      video.pause();
+      video.removeAttribute("autoplay");
+    }
   }
 
   // ====== RENDER STATIC ======
@@ -447,7 +412,7 @@
     setupAboutPhoto();
     setupLocationPhoto();
     setupMarqueePhotos();
-    setupHeroCinema();
+    setupHeroVideo();
 
     console.log("🐾 Paws Haven v10 loaded (LOCAL real photos, no CDN).");
   });

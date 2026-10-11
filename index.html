@@ -35,12 +35,15 @@
 <!-- ====== HERO ====== -->
 <section class="hero" id="top">
   <div class="hero-cinema" id="heroCinema">
-    <div class="hero-frame active" data-frame="0" style="background-image:url('assets/dogs/01-retriever-golden.jpg');background-size:cover;background-position:center"></div>
-    <div class="hero-frame" data-frame="1" style="background-image:url('assets/dogs/02-corgi-cardigan.jpg');background-size:cover;background-position:center"></div>
-    <div class="hero-frame" data-frame="2" style="background-image:url('assets/dogs/03-corgi.jpg');background-size:cover;background-position:center"></div>
-    <div class="hero-frame" data-frame="3" style="background-image:url('assets/dogs/04-husky.jpg');background-size:cover;background-position:center"></div>
-    <div class="hero-frame" data-frame="4" style="background-image:url('assets/dogs/05-german-shepherd.jpg');background-size:cover;background-position:center"></div>
-    <div class="hero-frame" data-frame="5" style="background-image:url('assets/dogs/06-poodle-standard.jpg');background-size:cover;background-position:center"></div>
+    <video class="hero-video" id="heroVideo"
+           autoplay muted loop playsinline preload="auto"
+           poster="assets/hero-poster.jpg">
+      <!-- Mobile -->
+      <source src="assets/hero-mobile.mp4" type="video/mp4" media="(max-width: 768px)">
+      <!-- Desktop -->
+      <source src="assets/hero-short.mp4" type="video/mp4">
+    </video>
+    <div class="hero-video-fallback" style="background-image:url('assets/hero-poster.jpg');background-size:cover;background-position:center"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-cinema-status"><span class="dot"></span><span>Live · кадры обновляются</span></div>
