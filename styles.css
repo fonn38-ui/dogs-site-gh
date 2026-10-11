@@ -517,3 +517,16 @@ img.loaded{animation:none}
   .hero h1,.hero .display{font-size:30px!important}
   .hero{padding:70px 0 40px!important}
 }
+
+/* ===== V20: Юридическая информация ===== */
+.legal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:1100px;margin:0 auto}
+.legal-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-md);padding:28px 24px;transition:transform .3s,border-color .3s}
+.legal-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.legal-icon{font-size:36px;margin-bottom:14px;display:block}
+.legal-card h4{font-size:14px;color:var(--muted-foreground);font-weight:500;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;font-family:Unbounded,sans-serif}
+.legal-card p{font-size:15px;line-height:1.6;color:var(--fg);margin:0 0 6px}
+.legal-card p strong{color:var(--accent);font-weight:600}
+.legal-card a{color:var(--fg);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.legal-card a:hover{border-bottom-color:var(--accent);color:var(--accent)}
+.muted{color:var(--muted-foreground)!important}
+@media (max-width:820px){.legal-grid{grid-template-columns:1fr;gap:14px}}

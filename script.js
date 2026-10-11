@@ -162,7 +162,17 @@
   }
   function renderLocation(){
     const L=window.PAWS.location;
+    const C=window.PAWS.contact||{};
     if(!document.getElementById("location")) return;
+    // Контактные данные
+    if(C.address){
+      const la = document.getElementById("contact-addr");
+      if(la) la.textContent = C.address;
+      const lm = document.getElementById("contact-metro");
+      if(lm) lm.textContent = C.metro;
+      const lh = document.getElementById("contact-hours");
+      if(lh) lh.textContent = C.hours;
+    }
     document.getElementById("loc-address").textContent=L.address;
     document.getElementById("loc-nearest").textContent=L.nearest;
     document.getElementById("loc-metro").textContent=L.metro;
