@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A2238"/>
+      <stop offset="100%" stop-color="#0F1424"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#g)"/>
+  
+<!-- Бутылочка с соской -->
+<g transform="translate(300, 200)">
+  <!-- Соска -->
+  <ellipse cx="0" cy="-100" rx="20" ry="25" fill="#F472B6"/>
+  <rect x="-15" y="-85" width="30" height="20" fill="#F472B6"/>
+  <!-- Горлышко -->
+  <rect x="-25" y="-65" width="50" height="15" fill="#1F2937"/>
+  <!-- Тело бутылки -->
+  <path d="M -55 -50 L 55 -50 L 65 100 L -65 100 Z" fill="#FBCFE8" stroke="#F472B6" stroke-width="2"/>
+  <!-- Содержимое (молоко) -->
+  <path d="M -50 20 L 50 20 L 62 95 L -62 95 Z" fill="white"/>
+  <!-- Метки -->
+  <line x1="-50" y1="0" x2="50" y2="0" stroke="#F472B6" stroke-width="1" opacity="0.5"/>
+  <line x1="-52" y1="30" x2="52" y2="30" stroke="#F472B6" stroke-width="1" opacity="0.5"/>
+  <line x1="-54" y1="60" x2="54" y2="60" stroke="#F472B6" stroke-width="1" opacity="0.5"/>
+  <!-- Этикетка -->
+  <rect x="-30" y="40" width="60" height="25" fill="#FCD34D" rx="3"/>
+  <text x="0" y="57" text-anchor="middle" font-family="Arial" font-size="10" fill="#92400E" font-weight="700">PUPPY</text>
+</g>
+<!-- Лапки щенка снизу -->
+<g transform="translate(220, 340)">
+  <ellipse cx="0" cy="0" rx="12" ry="18" fill="#FCD34D"/>
+  <circle cx="-4" cy="-5" r="3" fill="#F59E0B"/>
+  <circle cx="4" cy="-5" r="3" fill="#F59E0B"/>
+  <circle cx="0" cy="5" r="3" fill="#F59E0B"/>
+</g>
+<g transform="translate(380, 340)">
+  <ellipse cx="0" cy="0" rx="12" ry="18" fill="#FCD34D"/>
+  <circle cx="-4" cy="-5" r="3" fill="#F59E0B"/>
+  <circle cx="4" cy="-5" r="3" fill="#F59E0B"/>
+  <circle cx="0" cy="5" r="3" fill="#F59E0B"/>
+</g>
+<!-- Сердечки -->
+<text x="80" y="120" font-family="Arial" font-size="22" fill="#F472B6">♥</text>
+<text x="510" y="160" font-family="Arial" font-size="20" fill="#F472B6">♥</text>
+
+</svg>

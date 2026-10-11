@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A2238"/>
+      <stop offset="100%" stop-color="#0F1424"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#g)"/>
+  
+<!-- 3 головы собак в ряд -->
+<!-- Левая -->
+<g transform="translate(120, 200)">
+  <ellipse cx="0" cy="0" rx="60" ry="55" fill="#F59E0B"/>
+  <path d="M -50 -30 Q -45 -65 -20 -55 L -10 -40 Z" fill="#D97706"/>
+  <path d="M 50 -30 Q 45 -65 20 -55 L 10 -40 Z" fill="#D97706"/>
+  <circle cx="-18" cy="-5" r="5" fill="#1A2238"/>
+  <circle cx="18" cy="-5" r="5" fill="#1A2238"/>
+  <ellipse cx="0" cy="15" rx="6" ry="4" fill="#1A2238"/>
+  <path d="M -15 25 Q 0 32 15 25" stroke="#1A2238" stroke-width="3" fill="none" stroke-linecap="round"/>
+</g>
+<!-- Центральная (больше) -->
+<g transform="translate(300, 200)">
+  <ellipse cx="0" cy="0" rx="70" ry="65" fill="#FCD34D"/>
+  <path d="M -58 -35 Q -52 -75 -25 -62 L -12 -45 Z" fill="#D97706"/>
+  <path d="M 58 -35 Q 52 -75 25 -62 L 12 -45 Z" fill="#D97706"/>
+  <circle cx="-22" cy="-5" r="6" fill="#1A2238"/>
+  <circle cx="22" cy="-5" r="6" fill="#1A2238"/>
+  <ellipse cx="0" cy="18" rx="7" ry="5" fill="#1A2238"/>
+  <path d="M -20 30 Q 0 40 20 30" stroke="#1A2238" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Язычок -->
+  <ellipse cx="0" cy="32" rx="8" ry="4" fill="#EF4444"/>
+</g>
+<!-- Правая -->
+<g transform="translate(480, 200)">
+  <ellipse cx="0" cy="0" rx="60" ry="55" fill="#A78BFA"/>
+  <path d="M -50 -30 Q -45 -65 -20 -55 L -10 -40 Z" fill="#7C3AED"/>
+  <path d="M 50 -30 Q 45 -65 20 -55 L 10 -40 Z" fill="#7C3AED"/>
+  <circle cx="-18" cy="-5" r="5" fill="#1A2238"/>
+  <circle cx="18" cy="-5" r="5" fill="#1A2238"/>
+  <ellipse cx="0" cy="15" rx="6" ry="4" fill="#1A2238"/>
+</g>
+<!-- Линия земли / сердечки -->
+<text x="270" y="320" text-anchor="middle" font-family="Arial" font-size="20" fill="#EF4444">♥ ♥ ♥</text>
+
+</svg>

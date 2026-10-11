@@ -189,9 +189,10 @@
     if(!grid) return;
     grid.innerHTML = window.PAWS.services.map((s,i)=>`
       <article class="service-card visible">
-        <div class="service-photo" data-service-photo="${i}"><div class="placeholder">${s.icon}</div></div>
+        <div class="service-illust">
+          ${s.illust ? `<img src="${s.illust}" alt="${esc(s.title)}" loading="lazy" decoding="async">` : `<div class="placeholder">${s.icon}</div>`}
+        </div>
         <div class="service-body">
-          <span class="service-icon">${s.icon}</span>
           <h4>${esc(s.title)}</h4>
           <p>${esc(s.text)}</p>
         </div>

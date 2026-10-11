@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A2238"/>
+      <stop offset="100%" stop-color="#0F1424"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#g)"/>
+  
+<!-- Лента -->
+<path d="M 200 80 L 200 140 L 300 200 L 400 140 L 400 80 Z" fill="#3B82F6"/>
+<path d="M 240 80 L 240 130 L 300 170 L 360 130 L 360 80 Z" fill="#1E40AF"/>
+<!-- Медаль -->
+<circle cx="300" cy="240" r="55" fill="#FCD34D"/>
+<circle cx="300" cy="240" r="48" fill="#F59E0B"/>
+<circle cx="300" cy="240" r="38" fill="#FCD34D"/>
+<!-- Звезда на медали -->
+<path d="M 300 215 L 306 232 L 324 232 L 310 243 L 316 260 L 300 250 L 284 260 L 290 243 L 276 232 L 294 232 Z" fill="#92400E"/>
+<!-- Текст -->
+<text x="300" y="350" text-anchor="middle" font-family="Arial" font-size="14" fill="#94A3B8" font-weight="500">«место» «ко мне» «рядом»</text>
+
+</svg>

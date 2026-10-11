@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A2238"/>
+      <stop offset="100%" stop-color="#0F1424"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#g)"/>
+  
+<!-- Подушка -->
+<ellipse cx="300" cy="280" rx="180" ry="50" fill="#A78BFA"/>
+<ellipse cx="300" cy="270" rx="180" ry="50" fill="#C4B5FD"/>
+<!-- Собака спит на подушке -->
+<g transform="translate(300, 250)">
+  <!-- Тело -->
+  <ellipse cx="0" cy="0" rx="100" ry="50" fill="#FCD34D"/>
+  <!-- Голова -->
+  <ellipse cx="-80" cy="-15" rx="40" ry="35" fill="#FCD34D"/>
+  <!-- Уши (висят) -->
+  <ellipse cx="-95" cy="-25" rx="14" ry="22" fill="#92400E"/>
+  <ellipse cx="-65" cy="-30" rx="14" ry="22" fill="#92400E"/>
+  <!-- Закрытые глаза (сон) -->
+  <path d="M -90 -10 Q -85 -7 -80 -10" stroke="#1A2238" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M -75 -10 Q -70 -7 -65 -10" stroke="#1A2238" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Носик -->
+  <ellipse cx="-100" cy="0" rx="4" ry="3" fill="#1A2238"/>
+  <!-- Zzz -->
+  <text x="40" y="-30" font-family="Arial" font-size="28" fill="#94A3B8" font-weight="700">z</text>
+  <text x="55" y="-50" font-family="Arial" font-size="22" fill="#94A3B8" font-weight="700">z</text>
+  <text x="68" y="-68" font-family="Arial" font-size="16" fill="#94A3B8" font-weight="700">z</text>
+</g>
+<!-- Одеялко (сбоку) -->
+<path d="M 100 270 Q 200 290 300 280 Q 400 270 500 290" stroke="#60A5FA" stroke-width="20" fill="none" stroke-linecap="round" opacity="0.4"/>
+
+</svg>

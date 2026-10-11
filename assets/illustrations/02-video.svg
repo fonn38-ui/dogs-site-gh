@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A2238"/>
+      <stop offset="100%" stop-color="#0F1424"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#g)"/>
+  
+<!-- Телефон -->
+<rect x="200" y="60" width="200" height="290" rx="28" fill="#1F2937" stroke="#374151" stroke-width="3"/>
+<rect x="215" y="100" width="170" height="220" rx="8" fill="#0A0E1A"/>
+<!-- Экран видео -->
+<rect x="225" y="110" width="150" height="180" rx="4" fill="url(#v)"/>
+<defs><linearGradient id="v"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#1E40AF"/></linearGradient></defs>
+<!-- Собака в видео (мордочка) -->
+<ellipse cx="300" cy="200" rx="30" ry="26" fill="#F59E0B"/>
+<circle cx="290" cy="195" r="3" fill="#1A2238"/>
+<circle cx="310" cy="195" r="3" fill="#1A2238"/>
+<ellipse cx="300" cy="207" rx="4" ry="3" fill="#1A2238"/>
+<!-- Play-кнопка -->
+<circle cx="300" cy="200" r="22" fill="rgba(255,255,255,0.95)"/>
+<path d="M 295 192 L 295 208 L 308 200 Z" fill="#1E40AF"/>
+<!-- Telegram-иконка -->
+<circle cx="500" cy="120" r="35" fill="#229ED9"/>
+<path d="M 482 122 L 515 110 L 510 138 L 498 130 L 492 138 L 492 130" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+<!-- Каждый день -->
+<text x="50" y="350" font-family="Arial" font-size="12" fill="#94A3B8" opacity="0.7">ежедневно</text>
+
+</svg>
