@@ -484,3 +484,36 @@ img.loaded{animation:none}
   .nav a{font-size:10px!important}
   .btn-cta-header{display:none!important}
 }
+
+/* ===== V19: mobile hero fixes ===== */
+@media (max-width:480px){
+  .hero-content{padding:0 8px!important;max-width:100%!important}
+  .hero h1,.hero .display{font-size:34px!important;line-height:1.05!important;word-wrap:break-word!important;overflow-wrap:break-word!important}
+  .display-md{font-size:24px!important;line-height:1.15!important;word-wrap:break-word!important}
+  .container{padding:0 16px!important}
+  .hero{padding:80px 0 50px!important;min-height:80vh!important}
+  .hero-overlay{background:linear-gradient(180deg,rgba(10,14,26,0.4) 0%,rgba(10,14,26,0.2) 50%,rgba(10,14,26,0.85) 100%)!important}
+  .section{padding:50px 0!important}
+  .feature-photo,.service-photo{min-height:200px!important}
+  .story-img{min-height:240px!important}
+  .marquee-photo{width:150px;height:110px!important}
+  .metric-card{padding:16px 8px!important}
+  .metric-card strong{font-size:32px!important}
+  .btn{padding:12px 18px!important;font-size:13px!important}
+  .lead{font-size:14px!important;line-height:1.5!important}
+  .display{font-size:34px!important}
+  .process-step{padding:24px 20px!important}
+  .day-item{padding:20px 16px!important;grid-template-columns:1fr!important;gap:8px!important}
+  .day-time{font-size:14px!important}
+  .faq-q{font-size:15px!important;padding:16px!important}
+  .footer-inner{padding:30px 0 20px!important}
+  .footer-grid{gap:24px!important}
+  .testimonial,.review-card{padding:20px!important}
+  .contact-form input,.contact-form select,.contact-form textarea{padding:12px!important;font-size:14px!important}
+  .contact-form button{width:100%!important}
+  .lightbox-inner{width:95vw!important;max-height:90vh!important}
+}
+@media (max-width:375px){
+  .hero h1,.hero .display{font-size:30px!important}
+  .hero{padding:70px 0 40px!important}
+}
